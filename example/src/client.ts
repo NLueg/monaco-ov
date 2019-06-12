@@ -10,14 +10,6 @@ import {
 import normalizeUrl = require('normalize-url');
 const ReconnectingWebSocket = require('reconnecting-websocket');
 
-// register Monaco languages
-monaco.languages.register({
-    id: 'json',
-    extensions: ['.json', '.bowerrc', '.jshintrc', '.jscsrc', '.eslintrc', '.babelrc'],
-    aliases: ['JSON', 'json'],
-    mimetypes: ['application/json'],
-});
-
 // create Monaco editor
 const value = `{
     "$schema": "http://json.schemastore.org/coffeelint",
