@@ -12,24 +12,19 @@ import {
     SymbolInformation, DocumentSymbolParams, TextEdit, FoldingRange, ColorInformation, ColorPresentation
 } from "vscode-languageserver-types";
 import { TextDocumentPositionParams, DocumentRangeFormattingParams, ExecuteCommandParams, CodeActionParams, FoldingRangeRequestParam, DocumentColorParams, ColorPresentationParams } from 'vscode-languageserver-protocol';
-import { getLanguageService, LanguageService, JSONDocument } from "vscode-json-languageservice";
 
-export function start(reader: MessageReader, writer: MessageWriter): JsonServer {
+export function start(reader: MessageReader, writer: MessageWriter): OvlServer {
     const connection = createConnection(reader, writer);
-    const server = new JsonServer(connection);
+    const server = new OvlServer(connection);
     server.start();
     return server;
 }
 
-export class JsonServer {
+export class OvlServer {
 
     protected workspaceRoot: Uri | undefined;
 
     protected readonly documents = new TextDocuments();
-
-    protected readonly jsonService: LanguageService = getLanguageService({
-        schemaRequestService: this.resovleSchema.bind(this)
-    });
 
     protected readonly pendingValidationRequests = new Map<string, number>();
 
@@ -108,29 +103,32 @@ export class JsonServer {
     }
 
     protected getFoldingRanges(params: FoldingRangeRequestParam): FoldingRange[] {
-        const document = this.documents.get(params.textDocument.uri);
-        if (!document) {
-            return [];
-        }
-        return this.jsonService.getFoldingRanges(document);
+        // const document = this.documents.get(params.textDocument.uri);
+        // if (!document) {
+        //     return [];
+        // }
+        // return this.jsonService.getFoldingRanges(document);
+        return [];
     }
 
     protected findDocumentColors(params: DocumentColorParams): Thenable<ColorInformation[]> {
-        const document = this.documents.get(params.textDocument.uri);
-        if (!document) {
-            return Promise.resolve([]);
-        }
-        const jsonDocument = this.getJSONDocument(document);
-        return this.jsonService.findDocumentColors(document, jsonDocument);
+        // const document = this.documents.get(params.textDocument.uri);
+        // if (!document) {
+        //     return Promise.resolve([]);
+        // }
+        // const jsonDocument = this.getJSONDocument(document);
+        // return this.jsonService.findDocumentColors(document, jsonDocument);
+        return Promise.resolve([]);
     }
 
     protected getColorPresentations(params: ColorPresentationParams): ColorPresentation[] {
-        const document = this.documents.get(params.textDocument.uri);
-        if (!document) {
-            return [];
-        }
-        const jsonDocument = this.getJSONDocument(document);
-        return this.jsonService.getColorPresentations(document, jsonDocument, params.color, params.range);
+        // const document = this.documents.get(params.textDocument.uri);
+        // if (!document) {
+        //     return [];
+        // }
+        // const jsonDocument = this.getJSONDocument(document);
+        // return this.jsonService.getColorPresentations(document, jsonDocument, params.color, params.range);
+        return [];
     }
 
     protected codeAction(params: CodeActionParams): Command[] {
@@ -150,17 +148,19 @@ export class JsonServer {
     }
 
     protected format(params: DocumentRangeFormattingParams): TextEdit[] {
-        const document = this.documents.get(params.textDocument.uri);
-        return document ? this.jsonService.format(document, params.range, params.options) : [];
+        // const document = this.documents.get(params.textDocument.uri);
+        // return document ? this.jsonService.format(document, params.range, params.options) : [];
+        return [];
     }
 
     protected findDocumentSymbols(params: DocumentSymbolParams): SymbolInformation[] {
-        const document = this.documents.get(params.textDocument.uri);
-        if (!document) {
-            return [];
-        }
-        const jsonDocument = this.getJSONDocument(document);
-        return this.jsonService.findDocumentSymbols(document, jsonDocument);
+        // const document = this.documents.get(params.textDocument.uri);
+        // if (!document) {
+        //     return [];
+        // }
+        // const jsonDocument = this.getJSONDocument(document);
+        // return this.jsonService.findDocumentSymbols(document, jsonDocument);
+        return [];
     }
 
     protected executeCommand(params: ExecuteCommandParams): any {
@@ -185,12 +185,14 @@ export class JsonServer {
     }
 
     protected hover(params: TextDocumentPositionParams): Thenable<Hover | null> {
-        const document = this.documents.get(params.textDocument.uri);
-        if (!document) {
-            return Promise.resolve(null);
-        }
-        const jsonDocument = this.getJSONDocument(document);
-        return this.jsonService.doHover(document, params.position, jsonDocument);
+        // const document = this.documents.get(params.textDocument.uri);
+        // if (!document) {
+        //     return Promise.resolve(null);
+        // }
+        // const jsonDocument = this.getJSONDocument(document);
+        // return this.jsonService.doHover(document, params.position, jsonDocument);
+
+        return Promise.resolve(null);
     }
 
     protected resovleSchema(url: string): Promise<string> {
@@ -210,16 +212,19 @@ export class JsonServer {
     }
 
     protected resolveCompletion(item: CompletionItem): Thenable<CompletionItem> {
-        return this.jsonService.doResolve(item);
+        // return this.jsonService.doResolve(item);
+
+        return Promise.resolve(CompletionItem.create("Tolle Beschreibung"));
     }
 
     protected completion(params: TextDocumentPositionParams): Thenable<CompletionList | null> {
-        const document = this.documents.get(params.textDocument.uri);
-        if (!document) {
-            return Promise.resolve(null);
-        }
-        const jsonDocument = this.getJSONDocument(document);
-        return this.jsonService.doComplete(document, params.position, jsonDocument);
+        // const document = this.documents.get(params.textDocument.uri);
+        // if (!document) {
+        //     return Promise.resolve(null);
+        // }
+        // const jsonDocument = this.getJSONDocument(document);
+        // return this.jsonService.doComplete(document, params.position, jsonDocument);
+        return Promise.resolve(CompletionList.create([CompletionItem.create("Wundervolles Item")]));
     }
 
     protected validate(document: TextDocument): void {
@@ -239,14 +244,14 @@ export class JsonServer {
     }
 
     protected doValidate(document: TextDocument): void {
-        if (document.getText().length === 0) {
-            this.cleanDiagnostics(document);
-            return;
-        }
-        const jsonDocument = this.getJSONDocument(document);
-        this.jsonService.doValidation(document, jsonDocument).then(diagnostics =>
-            this.sendDiagnostics(document, diagnostics)
-        );
+        // if (document.getText().length === 0) {
+        //     this.cleanDiagnostics(document);
+        //     return;
+        // }
+        // const jsonDocument = this.getJSONDocument(document);
+        // this.jsonService.doValidation(document, jsonDocument).then(diagnostics =>
+        //     this.sendDiagnostics(document, diagnostics)
+        // );
     }
 
     protected cleanDiagnostics(document: TextDocument): void {
@@ -258,9 +263,4 @@ export class JsonServer {
             uri: document.uri, diagnostics
         });
     }
-
-    protected getJSONDocument(document: TextDocument): JSONDocument {
-        return this.jsonService.parseJSONDocument(document);
-    }
-
 }

@@ -12,8 +12,7 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const common = {
     entry: {
         "main": path.resolve(lib, "main.js"),
-        "editor.worker": 'monaco-editor/esm/vs/editor/editor.worker.js',
-        "json.worker": 'monaco-editor/esm/vs/language/json/json.worker.js'
+        "editor.worker": 'monaco-editor-core/esm/vs/editor/editor.worker.js'
     },
     output: {
         filename: '[name].bundle.js',
