@@ -18,6 +18,8 @@
 // tslint:disable:one-variable-per-declaration
 // tslint:disable:prefer-const
 
+import * as axios from 'axios';
+
 export function createTokenizationSupport(): monaco.languages.TokensProvider {
 	return {
 		getInitialState: () => new State(null, 0, 0),
@@ -28,13 +30,13 @@ export function createTokenizationSupport(): monaco.languages.TokensProvider {
 class State implements monaco.languages.IState {
 	public eolState: any;
 
-	constructor(public previus: monaco.languages.IState | null,
+	constructor(public previous: monaco.languages.IState | null,
 		public stageLine: number,
 		public count: number) {
 	}
 
 	public clone(): State {
-    	return new State(this.previus, this.stageLine, this.count);
+    	return new State(this.previous, this.stageLine, this.count);
   	}
 
 	public equals(other: monaco.languages.IState): boolean {
@@ -56,26 +58,54 @@ function tokenize(state: State, line: string): monaco.languages.ILineTokens {
 	// Create result early and fill in tokens
 	var ret = {
 		tokens: <monaco.languages.IToken[]>[],
-		endState: new State(null, 0, 0)
+		endState: new State(state, 0, 0)
 	};
 
-	let matchs;
-	rules.forEach(element => {
-		let regex = element[0];
-		let message = element[1];
+	var something = generate(line, "{Alter: 23}", "en", "java").then(response => {
+		console.log("--- RESPONSE ---");
+		console.log(response);
+	})
+	console.log(something);
 
-		while ((matchs = regex.exec(line)) !== null) {
-			ret.tokens.push({ startIndex: matchs.index, scopes: message });
-		}	
+	// let matchs;
+	rules.forEach(rule => {
+		let regex = rule[0];
+		let message = rule[1];
+
+		var matches = regex.exec(line);
+
+		if (matches !== null)
+			ret.tokens.push({ startIndex: matches.index, scopes: message});
 	});
+
+	// let matchs;
+	// rules.forEach(element => {
+	// 	let regex = element[0];
+	// 	let message = element[1];
+
+	// 	while ((matchs = regex.exec(line)) !== null) {
+	// 		ret.tokens.push({ startIndex: matchs.index, scopes: message });
+	// 	}	
+	// });
 
 	return ret;
 }
 
 var rules : [RegExp, string][] = [
 	[/WENN|UND|ODER|DANN|LÄNGER ALS|OPERAND|OPERATOR|KÜRZER ALS|DARF NICHT|HÖHER ALS|NIEDRIGER ALS|NIEDRIGER IST ALS|HÖHER IST ALS|GRÖßER IST ALS|KLEINER ALS|GRÖßER ALS|GERINGER IST ALS|IST GLEICH|IST UNGLEICH|IST KEIN|IST EIN|IST NICHT|IST GRÖßER ALS|IST MEHR ALS| IST HÖHER ALS|IST LÄNGER ALS|IST KLEINER ALS|IST WENIGER ALS|IST NIEDRIGER ALS|IST KÜRZER ALS|IST GRÖßER ODER GLEICH|IST MEHR ALS ODER GLEICH|IST KLEINER ODER GLEICH|IST WENIGER ALS ODER GLEICH|ENTHÄLT ALLES|IST EINS VON|IST KEINES VON|IST ENTHALTEN IN|IST VORHANDEN|IST NICHT VORHANDEN|IST|ALS|KLEINER|GRÖßER|GERINGER|WENIGER/, 'keyword'],
-	[/Alter|Name|Ort|Berufserfahrung|Jahresbruttogehalt|Kuendigungsfrist|Kreditpunkte/, "variable"],
+	[/Kreditpunkte/, "variable"],
 	[/KOMMENTAR(.*)/m, "comment"],
 	[/[\d.]*/, "constant.numeric"],
 	[/(?:ja|nein)\\b/, 'constant.language.boolean']
 ];
+
+var API_URL = "http://api.openvalidation.io";
+
+function generate(rule : string, schema : string, culture : string, language : string) {
+	return axios.default.post(API_URL, {
+		"rule": "the age of the applicant MUST be AT LEAST 18",
+		"schema": "{age:0}",
+		"culture": "en",
+		"language": "Java"
+	});
+}
