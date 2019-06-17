@@ -8,7 +8,7 @@ import {
     MonacoServices, createConnection
 } from 'monaco-languageclient';
 import normalizeUrl = require('normalize-url');
-import { createTokenizationSupport } from './tokenization/tokenization';
+// import { createTokenizationSupport } from './tokenization/tokenization';
 const ReconnectingWebSocket = require('reconnecting-websocket');
 
 // register Monaco languages
@@ -18,7 +18,25 @@ monaco.languages.register({
     aliases: ['OVL', 'ovl', 'openVALIDATION'],
 });
 
-monaco.languages.setTokensProvider('ovl', createTokenizationSupport());
+monaco.languages.setMonarchTokensProvider('ovl', tokenizer());
+
+function tokenizer() : monaco.languages.IMonarchLanguage {
+    return { 
+        tokenizer: {
+        root:  [
+                    [/WENN|UND|ODER|DANN|LÄNGER ALS|OPERAND|OPERATOR|KÜRZER ALS|DARF NICHT|HÖHER ALS|NIEDRIGER ALS|NIEDRIGER IST ALS|HÖHER IST ALS|GRÖßER IST ALS|KLEINER ALS|GRÖßER ALS|GERINGER IST ALS|IST GLEICH|IST UNGLEICH|IST KEIN|IST EIN|IST NICHT|IST GRÖßER ALS|IST MEHR ALS| IST HÖHER ALS|IST LÄNGER ALS|IST KLEINER ALS|IST WENIGER ALS|IST NIEDRIGER ALS|IST KÜRZER ALS|IST GRÖßER ODER GLEICH|IST MEHR ALS ODER GLEICH|IST KLEINER ODER GLEICH|IST WENIGER ALS ODER GLEICH|ENTHÄLT ALLES|IST EINS VON|IST KEINES VON|IST ENTHALTEN IN|IST VORHANDEN|IST NICHT VORHANDEN|IST|ALS|KLEINER|GRÖßER|GERINGER|WENIGER/,
+                    'keyword'],
+                    [/Alter|Name|Ort|Berufserfahrung|Jahresbruttogehalt|Kuendigungsfrist|Kreditpunkte/, "variable"],
+                    [/KOMMENTAR(.*)/m, "comment"],
+                    [/0[xX][0-9a-fA-F]+\\b/, "constant.numeric"],
+                    [/[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b/, "constant.numeric"],
+                    [/(?:ja|nein)\\b/, 'constant.language.boolean']
+                ]
+            }
+        };
+}
+
+// monaco.languages.setTokensProvider('ovl', createTokenizationSupport());
 
 monaco.editor.defineTheme('ovlTheme', {
     base: 'vs',
@@ -78,6 +96,12 @@ const editor = monaco.editor.create(document.getElementById("container")!, {
         enabled: true
     }
 });
+
+editor.deltaDecorations([], [
+	{ range: new monaco.Range(3,1,4,1), options: { isWholeLine: true, linesDecorationsClassName: 'myLineDecoration' }},
+	{ range: new monaco.Range(7,1,7,24), options: { inlineClassName: 'myInlineDecoration' }},
+]);
+
 
 // install Monaco language client services
 MonacoServices.install(editor);

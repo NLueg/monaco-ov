@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@monaco-languageclient/example",
+  "name": "monaco-ovl-languageclient",
   "version": "0.0.1",
   "dependencies": {
     "axios": "^0.19.0",
