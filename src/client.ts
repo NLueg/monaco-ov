@@ -51,7 +51,7 @@ monaco.editor.defineTheme('ovlTheme', {
     colors: {}
 });
 
-  // create Monaco editor
+// create Monaco editor
 const value = `WENN das Alter des Bewerbers KLEINER 18 ist
 DANN Sie müssen mindestens 18 Jahre alt sein
 
@@ -107,7 +107,7 @@ editor.deltaDecorations([], [
 MonacoServices.install(editor);
 
 // create the web socket
-const url = createUrl('/sampleServer')
+const url = createUrl('/ovlLanguage');
 const webSocket = createWebSocket(url);
 
 // listen when the web socket is opened
@@ -144,7 +144,7 @@ function createLanguageClient(connection: MessageConnection): MonacoLanguageClie
 
 function createUrl(path: string): string {
     const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-    return normalizeUrl(`${protocol}://${location.host}${location.pathname}${path}`);
+    return normalizeUrl(`${protocol}://localhost:3000${location.pathname}${path}`);
 }
 
 function createWebSocket(url: string): WebSocket {

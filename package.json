@@ -31,13 +31,12 @@
     "webpack-merge": "^4.1.2"
   },
   "scripts": {
-    "prepare": "npm run build",
+    "prepare": "npm run clean && npm run build",
     "compile": "tsc",
     "watch": "tsc -w",
     "clean": "rimraf lib",
     "copy": "cpx src/index.html lib",
     "build": "npm run compile && webpack && npm run copy",
-    "start": "node lib/server.js",
-    "start:ext": "node lib/server.js --external"
+    "start": "node lib/server.js"
   }
 }
