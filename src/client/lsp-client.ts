@@ -4,14 +4,12 @@ import {
     MonacoServices, createConnection
 } from 'monaco-languageclient';
 import normalizeUrl = require('normalize-url');
-// import { createTokenizationSupport } from './tokenization/tokenization';
+
 const ReconnectingWebSocket = require('reconnecting-websocket');
 
 export module LspClient {
     export function addAndCreateLangaugeClient(editor :  monaco.editor.IStandaloneCodeEditor) {
-        
-    console.log("Tokenization");
-    
+            
         // install Monaco language client services
         MonacoServices.install(editor);
 
