@@ -5,17 +5,16 @@
 'use strict';
 
 import { EndOfLineState, TokenClass, getTokenStringByTokenClass } from "./enums";
-import { createClassifier, Classifier } from "./classifier";
+import { createClassifier, Classifier } from "./Classifier";
 
 export function createTokenizationSupport(): monaco.languages.TokensProvider {
 	var classifier = createClassifier();
 
 	return {
 		getInitialState: () => new State(EndOfLineState.None, false),
-		tokenize: (line, state) => tokenize(classifier, <State>state, line)
+		tokenize: (line, state) => tokenize(classifier, <State>state, line) 
 	};
 }
-
 
 var bracketTypeTable: INumberStringDictionary = Object.create(null);
 bracketTypeTable['('.charCodeAt(0)] = 'delimiter.parenthesis.js';
@@ -55,7 +54,6 @@ class State implements monaco.languages.IState {
 		return true;
 	}
 }
-
 
 function appendToken(startIndex: number, type: string, ret: monaco.languages.ILineTokens): void {
 	if (ret.tokens.length === 0 || ret.tokens[ret.tokens.length - 1].scopes !== type) {

@@ -60,21 +60,16 @@ const staticRules: [RegExp, TokenClass][] = [
 ];
 
 function getClassificationRules(): [RegExp, TokenClass][] {
-    return getDynamicRules().concat(staticRules);
+    // var dynamicRules = await getDynamicRules();
+    var dynamicRules : [RegExp, TokenClass][] = [];
+    return dynamicRules.concat(staticRules);
 }
 
-function getDynamicRules(): [RegExp, TokenClass][] {
-
-    //TODO: Get Aliases via REST and convert them into our data structure
-
-    return [
-        [/WENN|UND|ODER|DANN|LÄNGER ALS|OPERAND|OPERATOR|KÜRZER ALS|DARF NICHT|HÖHER ALS|NIEDRIGER ALS|NIEDRIGER IST ALS|HÖHER IST ALS|GRÖßER IST ALS|KLEINER ALS|GRÖßER ALS|GERINGER IST ALS|IST GLEICH|IST UNGLEICH|IST KEIN|IST EIN|IST NICHT|IST GRÖßER ALS|IST MEHR ALS| IST HÖHER ALS|IST LÄNGER ALS|IST KLEINER ALS|IST WENIGER ALS|IST NIEDRIGER ALS|IST KÜRZER ALS|IST GRÖßER ODER GLEICH|IST MEHR ALS ODER GLEICH|IST KLEINER ODER GLEICH|IST WENIGER ALS ODER GLEICH|ENTHÄLT ALLES|IST EINS VON|IST KEINES VON|IST ENTHALTEN IN|IST VORHANDEN|IST NICHT VORHANDEN|IST|ALS|KLEINER|GRÖßER|GERINGER|WENIGER/,
-            TokenClass.Keyword],
-        [/Alter|Name|Ort|Berufserfahrung|Jahresbruttogehalt|Kuendigungsfrist|Kreditpunkte/, TokenClass.Variable],
-        [/KOMMENTAR(.*)/m, TokenClass.Comment],
-        [/(?:ja|nein)\\b/, TokenClass.BooleanLiteral]
-    ]
-}
+// async function getDynamicRules(): Promise<[RegExp, TokenClass][]> {
+//     var apiProxy = new ApiProxy();
+//     var response = await apiProxy.getData();
+//     return response.data;
+// }
 
 export interface ClassificationResult {
     endOfLineState: EndOfLineState;

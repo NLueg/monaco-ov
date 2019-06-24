@@ -1,4 +1,4 @@
-import { MonacoConfiguration } from "../monaco-configuration/configuration";
+import { MonacoConfiguration } from "../monaco-configuration/MonacoConfiguration";
 
 export namespace MonacoClient {
     MonacoConfiguration.setConfiguration();
