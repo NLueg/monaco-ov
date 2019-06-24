@@ -74,14 +74,14 @@ function tokenize(classifier: Classifier, state: State, text: string): monaco.la
 		endState: new State(EndOfLineState.None, false)
 	};
 
-	var result = classifier.getClassificationsForLine(text, state.eolState, true),
+	var result = classifier.getClassificationsForLine(text, state.eolState),
 		offset = 0;
 
 	ret.endState.eolState = result.endOfLineState;
 	ret.endState.inJsDocComment = result.endOfLineState === EndOfLineState.InMultiLineComment && (state.inJsDocComment || /\/\*\*.*$/.test(text));
 
 	for (let entry of result.entries) {
-		
+
 		if (entry.classification === TokenClass.Comment) {
 			// comments: check for JSDoc, block, and line comments
 			if (ret.endState.inJsDocComment || /\/\*\*.*\*\//.test(text.substr(offset, entry.length))) {

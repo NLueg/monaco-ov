@@ -5,40 +5,46 @@ export function createClassifier(): Classifier {
 }
 
 export class Classifier {
-    public getClassificationsForLine(line: string, lexState: EndOfLineState, syntacticClassifierAbsent: boolean): ClassificationResult {
+    public getClassificationsForLine(line: string, lexState: EndOfLineState): ClassificationResult {
         var entries: ClassificationInfo[] = [];
         var classificationRules = getClassificationRules();
 
         //TODO:  Highlight the Text after "DANN" in another color, same as an String-Operator
-        //TODO:  Implement Classification for more-line comments
 
         var wordList = line.split(/(\s+)/);
-        var previousClassification = TokenClass.Text;
+        var previousClassification : TokenClass = 
+            (lexState === EndOfLineState.InMultiLineComment && line.trim() !== "")
+                ? TokenClass.Comment    // Multiline Comment
+                : TokenClass.Text;      // Default
 
         wordList.forEach(word => {
             //Comments are in the whole line
-            if (previousClassification == TokenClass.Comment) {
+            if (previousClassification === TokenClass.Comment) {
                 entries.push({
                     length: word.length,
                     classification: previousClassification
                 });
             } else {
                 var matchingRule = classificationRules.filter(tuple => tuple[0].exec(word))[0];
-                var classification = matchingRule[1];
+                if (matchingRule !== undefined) {
+                    var classification = matchingRule[1];
 
-                if (matchingRule != null) {
-                    entries.push({
-                        length: word.length,
-                        classification: classification
-                    });
+                    if (matchingRule !== null) {
+                        entries.push({
+                            length: word.length,
+                            classification: classification
+                        });
 
-                    previousClassification = classification;
+                        previousClassification = classification;
+                    }
                 }
             }
         });
 
 
-        var lastState = EndOfLineState.InMultiLineComment;
+        var lastState = String(previousClassification) === String(TokenClass.Comment)
+            ? EndOfLineState.InMultiLineComment
+            : EndOfLineState.None;
 
         return {
             endOfLineState: lastState,
@@ -49,7 +55,7 @@ export class Classifier {
 
 const staticRules: [RegExp, TokenClass][] = [
     [/[0-9]+.[0-9]*/, TokenClass.NumberLiteral],
-    [/[ ]/, TokenClass.WhiteSpace],
+    [/[ ^$]/, TokenClass.WhiteSpace],
     [/[a-zA-Z]/, TokenClass.Text]
 ];
 
