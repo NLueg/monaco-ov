@@ -10,10 +10,18 @@ import { createClassifier, Classifier } from "./Classifier";
 export function createTokenizationSupport(): monaco.languages.TokensProvider {
 	var classifier = createClassifier();
 
-	return {
-		getInitialState: () => new State(EndOfLineState.None, false),
-		tokenize: (line, state) => tokenize(classifier, <State>state, line) 
-	};
+	return new OwnTokensProvider(classifier);
+}
+
+export class OwnTokensProvider implements monaco.languages.TokensProvider {
+	constructor(private readonly classifier: Classifier) { }
+
+	getInitialState(): monaco.languages.IState {
+		return new State(EndOfLineState.None, false)
+	}
+	tokenize(line: string, state: monaco.languages.IState): monaco.languages.ILineTokens {
+		return tokenize(this.classifier, <State>state, line);
+	}
 }
 
 var bracketTypeTable: INumberStringDictionary = Object.create(null);
@@ -72,7 +80,11 @@ function tokenize(classifier: Classifier, state: State, text: string): monaco.la
 		endState: new State(EndOfLineState.None, false)
 	};
 
-	var result = classifier.getClassificationsForLine(text, state.eolState),
+	// var result = await classifier.getClassificationsForLine(text, state.eolState),
+	var result = {		
+		endOfLineState: EndOfLineState.None,
+		entries: []
+	}, 
 		offset = 0;
 
 	ret.endState.eolState = result.endOfLineState;

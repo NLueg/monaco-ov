@@ -1,13 +1,14 @@
 import { EndOfLineState, TokenClass } from "./enums";
+import { ApiProxy } from "src/rest-interface/ApiProxy";
 
 export function createClassifier(): Classifier {
     return new Classifier();
 }
 
 export class Classifier {
-    public getClassificationsForLine(line: string, lexState: EndOfLineState): ClassificationResult {
+    public async getClassificationsForLine(line: string, lexState: EndOfLineState): Promise<ClassificationResult> {
         var entries: ClassificationInfo[] = [];
-        var classificationRules = getClassificationRules();
+        var classificationRules = await getClassificationRules();
 
         //TODO:  Highlight the Text after "DANN" in another color, same as an String-Operator
 
@@ -59,17 +60,17 @@ const staticRules: [RegExp, TokenClass][] = [
     [/[a-zA-Z]/, TokenClass.Text]
 ];
 
-function getClassificationRules(): [RegExp, TokenClass][] {
-    // var dynamicRules = await getDynamicRules();
+async function getClassificationRules(): Promise<[RegExp, TokenClass][]> {
+    var dynamicRules = await getDynamicRules();
     var dynamicRules : [RegExp, TokenClass][] = [];
     return dynamicRules.concat(staticRules);
 }
 
-// async function getDynamicRules(): Promise<[RegExp, TokenClass][]> {
-//     var apiProxy = new ApiProxy();
-//     var response = await apiProxy.getData();
-//     return response.data;
-// }
+async function getDynamicRules(): Promise<[RegExp, TokenClass][]> {
+    var apiProxy = new ApiProxy();
+    var response = await apiProxy.getData();
+    return response.data;
+}
 
 export interface ClassificationResult {
     endOfLineState: EndOfLineState;
