@@ -83,7 +83,10 @@ function tokenize(classifier: Classifier, state: State, text: string): monaco.la
 	// var result = await classifier.getClassificationsForLine(text, state.eolState),
 	var result = {		
 		endOfLineState: EndOfLineState.None,
-		entries: []
+		entries: [{
+			length: 10,
+			classification: TokenClass.Keyword
+		}]
 	}, 
 		offset = 0;
 

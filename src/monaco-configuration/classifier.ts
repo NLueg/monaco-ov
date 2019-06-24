@@ -1,5 +1,5 @@
 import { EndOfLineState, TokenClass } from "./enums";
-import { ApiProxy } from "src/rest-interface/ApiProxy";
+import { ApiProxy } from "../rest-interface/ApiProxy";
 
 export function createClassifier(): Classifier {
     return new Classifier();
