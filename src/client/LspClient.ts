@@ -8,8 +8,8 @@ import normalizeUrl = require('normalize-url');
 const ReconnectingWebSocket = require('reconnecting-websocket');
 
 export module LspClient {
-    export function addAndCreateLangaugeClient(editor :  monaco.editor.IStandaloneCodeEditor) {
-            
+    export function addAndCreateLangaugeClient(editor: monaco.editor.IStandaloneCodeEditor) {
+
         // install Monaco language client services
         MonacoServices.install(editor);
 
@@ -49,12 +49,12 @@ export module LspClient {
             }
         });
     }
-    
+
     function createUrl(path: string): string {
         const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
         return normalizeUrl(`${protocol}://localhost:3000${location.pathname}${path}`);
     }
-    
+
     function createWebSocket(url: string): WebSocket {
         const socketOptions = {
             maxReconnectionDelay: 10000,
