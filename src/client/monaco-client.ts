@@ -13,7 +13,7 @@ ALS  Minderjährig
 WENN der Bewerber Minderjährig ist
  UND sein Wohnort ist NICHT Dortmund
 DANN Sie müssen mindestens 18 Jahre alt sein und aus Dortmund kommen
-    
+
 WENN der Bewerber Minderjährig ist
     ODER seine Berufserfahrung ist KÜRZER als 5 Jahre
 DANN Sie müssen mindestens 18 Jahre alt sein und über eine Berufserfahrung
@@ -24,8 +24,6 @@ KOMMENTAR Dies ist ein Kommentar
 
     SUMME VON Einkaufsliste.Preis
 ALS Ausgaben
-
-die Ausgaben DÜRFEN NICHT das Budget von 20 € ÜBERSTEIGEN
 
     das Alter des Bewerbers ist KLEINER 18
 ALS Minderjährig
@@ -39,9 +37,10 @@ ALS Berufserfahrung in Monaten
 OPERATOR  KLEINER
         ALS  JÜNGER
 
-Der Bewerber DARF NICHT JÜNGER als 18 sein
-    
-    `;
+`;
+    // die Ausgaben DÜRFEN NICHT das Budget von 20 € ÜBERSTEIGEN
+
+    // Der Bewerber DARF NICHT JÜNGER als 18 sein
 
     export const editor = monaco.editor.create(document.getElementById("container")!, {
         model: monaco.editor.createModel(value, 'ovl', monaco.Uri.parse('inmemory://model.json')),
