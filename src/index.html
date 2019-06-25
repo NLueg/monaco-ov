@@ -7,7 +7,23 @@
 </head>
 
 <body>
-	<h2>Monaco Language Client Node.js Sample</h2>
-	<div id="container" style="width:800px;height:600px;border:1px solid grey"></div>
+	<a href="/">
+		<div id="logo"></div>
+	</a>
+
+	<div id="editor-wrapper">
+		<div class="panel rule">
+			<div id="monaco-editor" style="font-size: 1em"></div>
+		</div>
+		<div class="panel code">
+			<div id="generated-code"></div>
+		</div>
+
+		<div class="panel schema">
+			<div id="schema-definition"></div>
+		</div>
+	</div>
+
 	<script src="main.bundle.js"></script>
+
 </html>

@@ -4,114 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 'use strict';
 
-import { EndOfLineState, TokenClass, getTokenStringByTokenClass } from "./enums";
-import { createClassifier, Classifier } from "./Classifier";
+import { createClassifier } from "./Classifier";
+import { OwnTokensProvider } from "./OwnTokensProvider";
 
-export function createTokenizationSupport(): monaco.languages.TokensProvider {
+export async function createTokenizationSupport(): Promise<monaco.languages.TokensProvider> {
 	var classifier = createClassifier();
+	var classifiers = await classifier.getClassificationRules();
 
-	return new OwnTokensProvider(classifier);
-}
-
-export class OwnTokensProvider implements monaco.languages.TokensProvider {
-	constructor(private readonly classifier: Classifier) { }
-
-	getInitialState(): monaco.languages.IState {
-		return new State(EndOfLineState.None, false)
-	}
-	tokenize(line: string, state: monaco.languages.IState): monaco.languages.ILineTokens {
-		return tokenize(this.classifier, <State>state, line);
-	}
-}
-
-var bracketTypeTable: INumberStringDictionary = Object.create(null);
-bracketTypeTable['('.charCodeAt(0)] = 'delimiter.parenthesis.js';
-bracketTypeTable[')'.charCodeAt(0)] = 'delimiter.parenthesis.js';
-bracketTypeTable['{'.charCodeAt(0)] = 'delimiter.bracket.js';
-bracketTypeTable['}'.charCodeAt(0)] = 'delimiter.bracket.js';
-bracketTypeTable['['.charCodeAt(0)] = 'delimiter.array.js';
-bracketTypeTable[']'.charCodeAt(0)] = 'delimiter.array.js';
-
-class State implements monaco.languages.IState {
-
-	public eolState: EndOfLineState;
-	public inJsDocComment: boolean;
-
-	constructor(eolState: EndOfLineState, inJsDocComment: boolean) {
-		this.eolState = eolState;
-		this.inJsDocComment = inJsDocComment;
-	}
-
-	public clone(): State {
-		return new State(this.eolState, this.inJsDocComment);
-	}
-
-	public equals(other: monaco.languages.IState): boolean {
-		if (other === this) {
-			return true;
-		}
-		if (!other || !(other instanceof State)) {
-			return false;
-		}
-		if (this.eolState !== (<State>other).eolState) {
-			return false;
-		}
-		if (this.inJsDocComment !== (<State>other).inJsDocComment) {
-			return false;
-		}
-		return true;
-	}
-}
-
-function appendToken(startIndex: number, type: string, ret: monaco.languages.ILineTokens): void {
-	if (ret.tokens.length === 0 || ret.tokens[ret.tokens.length - 1].scopes !== type) {
-		ret.tokens.push({
-			startIndex: startIndex,
-			scopes: type
-		});
-	}
-}
-
-function tokenize(classifier: Classifier, state: State, text: string): monaco.languages.ILineTokens {
-
-	// Create result early and fill in tokens
-	var ret = {
-		tokens: <monaco.languages.IToken[]>[],
-		endState: new State(EndOfLineState.None, false)
-	};
-
-	// var result = await classifier.getClassificationsForLine(text, state.eolState),
-	var result = {		
-		endOfLineState: EndOfLineState.None,
-		entries: [{
-			length: 10,
-			classification: TokenClass.Keyword
-		}]
-	}, 
-		offset = 0;
-
-	ret.endState.eolState = result.endOfLineState;
-	ret.endState.inJsDocComment = result.endOfLineState === EndOfLineState.InMultiLineComment && (state.inJsDocComment || /\/\*\*.*$/.test(text));
-
-	for (let entry of result.entries) {
-
-		if (entry.classification === TokenClass.Comment) {
-			// comments: check for JSDoc, block, and line comments
-			if (ret.endState.inJsDocComment || /\/\*\*.*\*\//.test(text.substr(offset, entry.length))) {
-				appendToken(offset, getTokenStringByTokenClass(TokenClass.Comment), ret);
-			} else {
-				appendToken(offset, getTokenStringByTokenClass(TokenClass.Comment), ret);
-			}
-		} else {
-			appendToken(offset, getTokenStringByTokenClass(entry.classification), ret);
-		}
-
-		offset += entry.length;
-	}
-
-	return ret;
-}
-
-interface INumberStringDictionary {
-	[idx: number]: string;
+	return new OwnTokensProvider(classifiers);
 }

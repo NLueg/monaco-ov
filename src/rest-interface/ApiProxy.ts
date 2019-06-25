@@ -7,9 +7,9 @@ export class ApiProxy {
     /**
      * request
      */
-    public postData(rule : string): AxiosPromise {
-        return axios({ 
-            method: "POST", 
+    public postData(rule: string): AxiosPromise {
+        return axios({
+            method: "POST",
             url: this.ovlApiUrl,
             "data": {
                 "rule": rule,
@@ -17,17 +17,17 @@ export class ApiProxy {
                 "culture": "de",
                 "language": "Java"
             },
-            validateStatus : (status) => {
+            validateStatus: (status) => {
                 return status == 418 || status == 200;
             },
-            headers: { "content-type": "application/json", "accept":"application/json" } 
+            headers: { "content-type": "application/json", "accept": "application/json" }
         });
     }
 
     /**
      * getData
   : AxiosPromise    */
-    public getData() : AxiosPromise {
+    public getData(): AxiosPromise {
         return axios({
             method: "GET",
             url: this.ovlSyntaxUrl

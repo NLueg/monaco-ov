@@ -42,9 +42,10 @@ OPERATOR  KLEINER
 
     // Der Bewerber DARF NICHT JÜNGER als 18 sein
 
-    export const editor = monaco.editor.create(document.getElementById("container")!, {
-        model: monaco.editor.createModel(value, 'ovl', monaco.Uri.parse('inmemory://model.json')),
+    export const editor = monaco.editor.create(document.getElementById("monaco-editor")!, {
+        model: monaco.editor.createModel(value, 'ovl', monaco.Uri.parse('inmemory://model.ovl')),
         theme: 'ovlTheme',
+        automaticLayout: true,
         glyphMargin: true,
         lightbulb: {
             enabled: true

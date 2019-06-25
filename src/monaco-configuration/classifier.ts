@@ -6,14 +6,12 @@ export function createClassifier(): Classifier {
 }
 
 export class Classifier {
-    public async getClassificationsForLine(line: string, lexState: EndOfLineState): Promise<ClassificationResult> {
+    public static validate(classificationRules : [RegExp, TokenClass][], line: string, lexState: EndOfLineState): ClassificationResult {
         var entries: ClassificationInfo[] = [];
-        var classificationRules = await getClassificationRules();
 
         //TODO:  Highlight the Text after "DANN" in another color, same as an String-Operator
-
         var wordList = line.split(/(\s+)/);
-        var previousClassification : TokenClass = 
+        var previousClassification: TokenClass =
             (lexState === EndOfLineState.InMultiLineComment && line.trim() !== "")
                 ? TokenClass.Comment    // Multiline Comment
                 : TokenClass.Text;      // Default
@@ -42,7 +40,6 @@ export class Classifier {
             }
         });
 
-
         var lastState = String(previousClassification) === String(TokenClass.Comment)
             ? EndOfLineState.InMultiLineComment
             : EndOfLineState.None;
@@ -52,24 +49,41 @@ export class Classifier {
             entries: entries
         };
     }
-}
 
-const staticRules: [RegExp, TokenClass][] = [
-    [/[0-9]+.[0-9]*/, TokenClass.NumberLiteral],
-    [/[ ^$]/, TokenClass.WhiteSpace],
-    [/[a-zA-Z]/, TokenClass.Text]
-];
+    public staticRules: [RegExp, TokenClass][] = [
+        [/[0-9]+.[0-9]*/, TokenClass.NumberLiteral],
+        [/[ ^$]/, TokenClass.WhiteSpace],
+        [/[a-zA-Z]/, TokenClass.Text]
+    ];
 
-async function getClassificationRules(): Promise<[RegExp, TokenClass][]> {
-    var dynamicRules = await getDynamicRules();
-    var dynamicRules : [RegExp, TokenClass][] = [];
-    return dynamicRules.concat(staticRules);
-}
+    public async getClassificationRules(): Promise<[RegExp, TokenClass][]> {
+        var dynamicRules: [RegExp, TokenClass][] = await this.getDynamicRules();
+        return dynamicRules.concat(this.staticRules);
+    }
 
-async function getDynamicRules(): Promise<[RegExp, TokenClass][]> {
-    var apiProxy = new ApiProxy();
-    var response = await apiProxy.getData();
-    return response.data;
+    public async getDynamicRules(): Promise<[RegExp, TokenClass][]> {
+        try {
+            var apiProxy = new ApiProxy();
+            var response = await apiProxy.getData();
+
+            if (response == null ||
+                response.data == null)
+                throw Error("Response of Dynamic Rules is empty");
+            
+            var dynamicRules : [RegExp, TokenClass][] = []
+
+            for (let index = 0; index < response.data.length; index++) {
+                const element = response.data[index];
+                dynamicRules.push([new RegExp(element[0]), element[1]]);
+            }
+
+            return dynamicRules;
+
+        } catch (err) {
+            console.log(err);
+        }
+        return [];
+    }
 }
 
 export interface ClassificationResult {
