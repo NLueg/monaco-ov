@@ -1,4 +1,4 @@
-import { EndOfLineState } from "./enums";
+import { EndOfLineState } from "../monaco-configuration/Enums";
 
 export class TokenizationState implements monaco.languages.IState {
     public eolState: EndOfLineState;

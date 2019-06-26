@@ -1,12 +1,8 @@
-import { EndOfLineState, TokenClass } from "./enums";
+import { EndOfLineState, TokenClass } from "../monaco-configuration/Enums";
 import { ApiProxy } from "../rest-interface/ApiProxy";
 
-export function createClassifier(): Classifier {
-    return new Classifier();
-}
-
 export class Classifier {
-    public static validate(classificationRules : [RegExp, TokenClass][], line: string, lexState: EndOfLineState): ClassificationResult {
+    public static validate(classificationRules: [RegExp, TokenClass][], line: string, lexState: EndOfLineState): ClassificationResult {
         var entries: ClassificationInfo[] = [];
 
         //TODO:  Highlight the Text after "DANN" in another color, same as an String-Operator
@@ -14,7 +10,7 @@ export class Classifier {
         var previousClassification: TokenClass =
             (lexState === EndOfLineState.InMultiLineComment && line.trim() !== "")
                 ? TokenClass.Comment    // Multiline Comment
-                : TokenClass.Text;      // Default
+                : TokenClass.Punctuation;      // Default
 
         wordList.forEach(word => {
             //Comments are in the whole line
@@ -25,10 +21,12 @@ export class Classifier {
                 });
             } else {
                 var matchingRule = classificationRules.filter(tuple => tuple[0].exec(word))[0];
+
                 if (matchingRule !== undefined) {
                     var classification = matchingRule[1];
 
-                    if (matchingRule !== null) {
+                    console.log(classification);
+                    if (classification !== null) {
                         entries.push({
                             length: word.length,
                             classification: classification
@@ -50,18 +48,18 @@ export class Classifier {
         };
     }
 
-    public staticRules: [RegExp, TokenClass][] = [
-        [/[0-9]+.[0-9]*/, TokenClass.NumberLiteral],
-        [/[ ^$]/, TokenClass.WhiteSpace],
-        [/[a-zA-Z]/, TokenClass.Text]
-    ];
-
-    public async getClassificationRules(): Promise<[RegExp, TokenClass][]> {
+    public static async getClassificationRules(): Promise<[RegExp, TokenClass][]> {
         var dynamicRules: [RegExp, TokenClass][] = await this.getDynamicRules();
         return dynamicRules.concat(this.staticRules);
     }
 
-    public async getDynamicRules(): Promise<[RegExp, TokenClass][]> {
+    private static staticRules: [RegExp, TokenClass][] = [
+        [/[0-9]+.[0-9]*/, TokenClass.NumberLiteral],
+        [/[ ^$]/, TokenClass.Whitespace],
+        [/[a-zA-Z]/, TokenClass.Punctuation]
+    ];
+
+    private static async getDynamicRules(): Promise<[RegExp, TokenClass][]> {
         try {
             var apiProxy = new ApiProxy();
             var response = await apiProxy.getData();
@@ -69,8 +67,8 @@ export class Classifier {
             if (response == null ||
                 response.data == null)
                 throw Error("Response of Dynamic Rules is empty");
-            
-            var dynamicRules : [RegExp, TokenClass][] = []
+
+            var dynamicRules: [RegExp, TokenClass][] = []
 
             for (let index = 0; index < response.data.length; index++) {
                 const element = response.data[index];

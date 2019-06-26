@@ -4,12 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 'use strict';
 
-import { createClassifier } from "./Classifier";
-import { OwnTokensProvider } from "./OwnTokensProvider";
+import { Classifier } from "./Classifier";
+import { OvlTokenProvider } from "./OvlTokenProvider";
 
 export async function createTokenizationSupport(): Promise<monaco.languages.TokensProvider> {
-	var classifier = createClassifier();
-	var classifiers = await classifier.getClassificationRules();
-
-	return new OwnTokensProvider(classifiers);
+	var classifiers = await Classifier.getClassificationRules();
+	return new OvlTokenProvider(classifiers);
 }

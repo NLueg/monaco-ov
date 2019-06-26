@@ -1,5 +1,5 @@
-import { createTokenizationSupport } from "./tokenization";
-import { getTokenStringByTokenClass, TokenClass } from "./enums";
+import { createTokenizationSupport } from "../tokenization/tokenization";
+import { getTokenStringByTokenClass, TokenClass } from "./Enums";
 
 export namespace MonacoConfiguration {
     export async function setConfiguration() {
@@ -20,10 +20,10 @@ export namespace MonacoConfiguration {
             inherit: false,
             rules: [
                 { token: getTokenStringByTokenClass(TokenClass.Keyword), foreground: '8e8e8e', fontStyle: 'bold' },
-                { token: getTokenStringByTokenClass(TokenClass.Variable), foreground: '0000ff', fontStyle: 'bold' },
+                { token: getTokenStringByTokenClass(TokenClass.Identifier), foreground: '0000ff', fontStyle: 'bold' },
                 { token: getTokenStringByTokenClass(TokenClass.Comment), foreground: '608b4e', fontStyle: 'bold' },
                 { token: getTokenStringByTokenClass(TokenClass.NumberLiteral), foreground: 'b5cea8', fontStyle: 'bold' },
-                { token: getTokenStringByTokenClass(TokenClass.BooleanLiteral), foreground: '0000ff', fontStyle: 'bold' },
+                { token: getTokenStringByTokenClass(TokenClass.StringLiteral), foreground: '0000ff', fontStyle: 'bold' },
             ],
             colors: {}
         });

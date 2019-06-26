@@ -4,30 +4,27 @@ export enum EndOfLineState {
 }
 
 export enum TokenClass {
-    Variable,
-    Keyword,
-    Operator,
-    Punctuation,
-    BooleanLiteral,
-    NumberLiteral,
-    StringLiteral,
-    Comment,
-    WhiteSpace,
-    Text
+    Punctuation = 0,
+    Keyword = 1,
+    Operator = 2,
+    Comment = 3,
+    Whitespace = 4,
+    Identifier = 5,
+    NumberLiteral = 6,
+    StringLiteral = 7,
+    RegExpLiteral = 8,
 }
 
 const TokenClassString = new Map<number, string>(
     [
-        [TokenClass.Variable, "identifier"],
         [TokenClass.Keyword, "keyword"],
         [TokenClass.Operator,"operator"],
         [TokenClass.Punctuation,"punctuation"],
-        [TokenClass.BooleanLiteral,"booleanLiteral"],
         [TokenClass.NumberLiteral,"numberLiteral"],
-        [TokenClass.StringLiteral,"stringLiteral"],
+        [TokenClass.StringLiteral, "text"],
         [TokenClass.Comment,"comment"],
-        [TokenClass.WhiteSpace,"whiteSpace"],
-        [TokenClass.Text, "text"]
+        [TokenClass.Whitespace,"whiteSpace"],
+        [TokenClass.Identifier,"identifier"]
     ]
 );
 

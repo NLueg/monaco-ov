@@ -1,8 +1,8 @@
-import { EndOfLineState, TokenClass, getTokenStringByTokenClass } from "./enums";
+import { EndOfLineState, TokenClass, getTokenStringByTokenClass } from "../monaco-configuration/Enums";
 import { Classifier } from "./Classifier";
 import { TokenizationState } from "./TokenizationState";
 
-export class OwnTokensProvider implements monaco.languages.TokensProvider {
+export class OvlTokenProvider implements monaco.languages.TokensProvider {
     constructor(private readonly classifier: [RegExp, TokenClass][]) { }
 
     getInitialState(): monaco.languages.IState {

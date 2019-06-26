@@ -1,4 +1,4 @@
-import { listen, MessageConnection } from 'vscode-ws-jsonrpc';
+import { listen, MessageConnection } from '@sourcegraph/vscode-ws-jsonrpc';
 import {
     MonacoLanguageClient, CloseAction, ErrorAction,
     MonacoServices, createConnection
@@ -8,7 +8,7 @@ import normalizeUrl = require('normalize-url');
 const ReconnectingWebSocket = require('reconnecting-websocket');
 
 export module LspClient {
-    export function addAndCreateLangaugeClient(editor: monaco.editor.IStandaloneCodeEditor) {
+    export function addAndCreateLanguageClient(editor: monaco.editor.IStandaloneCodeEditor) {
 
         // install Monaco language client services
         MonacoServices.install(editor);

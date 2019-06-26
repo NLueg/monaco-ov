@@ -1,8 +1,7 @@
 import { LspClient } from "./LspClient";
 import { MonacoClient } from "./MonacoClient";
  
-LspClient.addAndCreateLangaugeClient(MonacoClient.editor);
-
+LspClient.addAndCreateLanguageClient(MonacoClient.editor);
 
 var valueCode = `huml.appendRule("",
 ["name"],
@@ -13,8 +12,9 @@ function(model) {
 false
 );`;
 monaco.editor.create(document.getElementById("generated-code")!, {
-    model: monaco.editor.createModel(valueCode, 'javascript', monaco.Uri.parse('inmemory://model.java')),
-    theme: 'vs-dark',
+    model: monaco.editor.createModel(valueCode, 'java', monaco.Uri.parse('inmemory://model.java')),
+    theme: 'ovlTheme',
+    readOnly: true,
     automaticLayout: true,
     glyphMargin: true,
     lightbulb: {
@@ -27,7 +27,7 @@ Alter: 25
 Ort: Dortmund`;
 monaco.editor.create(document.getElementById("schema-definition")!, {
     model: monaco.editor.createModel(valueSchema, 'yaml', monaco.Uri.parse('inmemory://model.yaml')),
-    theme: 'vs-dark',
+    theme: 'vs',
     automaticLayout: true,
     glyphMargin: true,
     lightbulb: {
