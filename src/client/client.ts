@@ -1,7 +1,7 @@
 import { LspClient } from "./LspClient";
 import { MonacoClient } from "./MonacoClient";
  
-LspClient.addAndCreateLanguageClient(MonacoClient.editor);
+LspClient.addAndCreateLanguageClient(MonacoClient.createEditor());
 
 var valueCode = `huml.appendRule("",
 ["name"],

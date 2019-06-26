@@ -1,10 +1,22 @@
-import { MonacoConfiguration } from "../monaco-configuration/MonacoConfiguration";
+import { MonacoOvlConfiguration } from "../monaco-configuration/MonacoOvlConfiguration";
 
-export namespace MonacoClient {
-    MonacoConfiguration.setConfiguration();
+export class MonacoClient {
+    public static createEditor() : monaco.editor.IStandaloneCodeEditor {
+        MonacoOvlConfiguration.setConfiguration();
+
+        return monaco.editor.create(document.getElementById("monaco-editor")!, {
+            model: monaco.editor.createModel(this.initialValue, 'ovl', monaco.Uri.parse('inmemory://model.ovl')),
+            theme: 'ovlTheme',
+            automaticLayout: true,
+            glyphMargin: true,
+            lightbulb: {
+                enabled: true
+            }
+        });
+    }
 
     // create Monaco editor
-    const value = `WENN das Alter des Bewerbers KLEINER 18 ist
+    private static initialValue = `WENN das Alter des Bewerbers KLEINER 18 ist
 DANN Sie müssen mindestens 18 Jahre alt sein
 
     das Alter des Bewerbers ist KLEINER 18
@@ -41,14 +53,4 @@ OPERATOR  KLEINER
     // die Ausgaben DÜRFEN NICHT das Budget von 20 € ÜBERSTEIGEN
 
     // Der Bewerber DARF NICHT JÜNGER als 18 sein
-
-    export const editor = monaco.editor.create(document.getElementById("monaco-editor")!, {
-        model: monaco.editor.createModel(value, 'ovl', monaco.Uri.parse('inmemory://model.ovl')),
-        theme: 'ovlTheme',
-        automaticLayout: true,
-        glyphMargin: true,
-        lightbulb: {
-            enabled: true
-        }
-    });
 }

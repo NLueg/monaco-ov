@@ -23,14 +23,14 @@ export class ApiProxy {
             headers: { "content-type": "application/json", "accept": "application/json" }
         });
     }
-
+    
     /**
      * getData
   : AxiosPromise    */
-    public getData(): AxiosPromise {
-        return axios({
-            method: "GET",
-            url: this.ovlSyntaxUrl
-        });
-    }
+  public getData(): AxiosPromise {
+    return axios({
+        method: "GET",
+        url: this.ovlSyntaxUrl
+    });
+}
 }

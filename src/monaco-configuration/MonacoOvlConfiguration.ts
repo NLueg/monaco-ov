@@ -1,7 +1,7 @@
 import { createTokenizationSupport } from "../tokenization/tokenization";
 import { getTokenStringByTokenClass, TokenClass } from "./Enums";
 
-export namespace MonacoConfiguration {
+export namespace MonacoOvlConfiguration {
     export async function setConfiguration() {
         // register Monaco languages
         monaco.languages.register({
@@ -10,10 +10,8 @@ export namespace MonacoConfiguration {
             aliases: ['OVL', 'ovl', 'openVALIDATION'],
         });
         
-        // imports syntax-highlighting for ovl
         monaco.languages.setTokensProvider('ovl', createTokenizationSupport());
 
-        //TODO: Rules should be named like in vs
         // defines color of the defined languages
         monaco.editor.defineTheme('ovlTheme', {
             base: 'vs',

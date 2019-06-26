@@ -25,7 +25,6 @@ export class Classifier {
                 if (matchingRule !== undefined) {
                     var classification = matchingRule[1];
 
-                    console.log(classification);
                     if (classification !== null) {
                         entries.push({
                             length: word.length,
@@ -60,6 +59,7 @@ export class Classifier {
     ];
 
     private static async getDynamicRules(): Promise<[RegExp, TokenClass][]> {
+        //TODO: How to get prevoiusly generated rules
         try {
             var apiProxy = new ApiProxy();
             var response = await apiProxy.getData();
