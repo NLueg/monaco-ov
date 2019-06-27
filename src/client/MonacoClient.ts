@@ -1,10 +1,8 @@
 import { MonacoOvlConfiguration } from "../monaco-configuration/MonacoOvlConfiguration";
 
 export class MonacoClient {
-    public static createEditor() : monaco.editor.IStandaloneCodeEditor {
-        MonacoOvlConfiguration.setConfiguration();
-
-        return monaco.editor.create(document.getElementById("monaco-editor")!, {
+    public static async createEditor() : Promise<monaco.editor.IStandaloneCodeEditor> {
+        var editor = monaco.editor.create(document.getElementById("monaco-editor")!, {
             model: monaco.editor.createModel(this.initialValue, 'ovl', monaco.Uri.parse('inmemory://model.ovl')),
             theme: 'ovlTheme',
             automaticLayout: true,
@@ -13,6 +11,11 @@ export class MonacoClient {
                 enabled: true
             }
         });
+
+        MonacoOvlConfiguration.setConfiguration();
+        await MonacoOvlConfiguration.setTokenization(this.initialValue);
+
+        return editor;
     }
 
     // create Monaco editor
@@ -36,9 +39,6 @@ KOMMENTAR Dies ist ein Kommentar
 
     SUMME VON Einkaufsliste.Preis
 ALS Ausgaben
-
-    das Alter des Bewerbers ist KLEINER 18
-ALS Minderjährig
 
 das Alter des Bewerbers MUSS MINDESTENS 18 sein
 

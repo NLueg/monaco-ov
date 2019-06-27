@@ -3,7 +3,8 @@ import { Classifier } from "./Classifier";
 import { TokenizationState } from "./TokenizationState";
 
 export class OvlTokenProvider implements monaco.languages.TokensProvider {
-    constructor(private readonly classifier: [RegExp, TokenClass][]) { }
+    constructor(private readonly classifier: [RegExp, TokenClass][]) {
+     }
 
     getInitialState(): monaco.languages.IState {
         return new TokenizationState(EndOfLineState.None, false);

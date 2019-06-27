@@ -11,8 +11,10 @@ require('monaco-editor');
         return './editor.worker.bundle.js'
     }
 }
-require('./client/client');
-
 
 require('../css/style.css');
 require('../images/logo-v2-small.png');
+
+import { Main } from './client/client';
+Main.createEditors();
+

@@ -1,35 +1,51 @@
 import { listen, MessageConnection } from '@sourcegraph/vscode-ws-jsonrpc';
 import {
     MonacoLanguageClient, CloseAction, ErrorAction,
-    MonacoServices, createConnection
+    MonacoServices, createConnection, TextDocumentDidChangeEvent
 } from 'monaco-languageclient';
 import normalizeUrl = require('normalize-url');
+import { MonacoOvlConfiguration } from '../monaco-configuration/MonacoOvlConfiguration';
 
 const ReconnectingWebSocket = require('reconnecting-websocket');
 
 export module LspClient {
     export function addAndCreateLanguageClient(editor: monaco.editor.IStandaloneCodeEditor) {
-
-        // install Monaco language client services
-        MonacoServices.install(editor);
-
         // create the web socket
         const url = createUrl('/ovlLanguage');
         const webSocket = createWebSocket(url);
 
+        // install Monaco language client services
+        var services = MonacoServices.install(editor);
+
         // listen when the web socket is opened
         listen({
             webSocket,
-            onConnection: connection => {
+            onConnection: async connection => {
+
                 // create and start the language client
-                const languageClient = createLanguageClient(connection);
+                const languageClient = createLanguageClient(connection, services);
                 const disposable = languageClient.start();
                 connection.onClose(() => disposable.dispose());
+
+                await languageClient.onReady;
+                services.workspace.onDidChangeTextDocument(async (res: TextDocumentDidChangeEvent) => {
+                    MonacoOvlConfiguration.setTokenization(res.textDocument.getText());
+
+                    // //TODO: How to dispose the listener and/or use the newest connection
+                    // //TODO: Try to get the response from the existing call or ask the websocket for given symbols
+                    // connection.sendRequest("syntax", res.textDocument.uri).then(res => {
+                    //     var convertedResponse = res as [string, number][];
+                    //     if (!convertedResponse) return;
+
+                    //     var regexList = getRegEx(convertedResponse);
+                    //     MonacoOvlConfiguration.setTokenization(regexList);
+                    // });
+                });
             }
         });
     }
 
-    function createLanguageClient(connection: MessageConnection): MonacoLanguageClient {
+    function createLanguageClient(connection: MessageConnection, services: MonacoServices): MonacoLanguageClient {
         return new MonacoLanguageClient({
             name: "Ovl Language Client",
             clientOptions: {
@@ -44,7 +60,32 @@ export module LspClient {
             // create a language client connection from the JSON RPC connection on demand
             connectionProvider: {
                 get: (errorHandler, closeHandler) => {
-                    return Promise.resolve(createConnection(connection, errorHandler, closeHandler))
+                    //TODO: ERROR, when LSP restarts, maybe just use REST for now
+                    var createdConnection = createConnection(connection, errorHandler, closeHandler);
+
+                    // services.workspace.onDidChangeTextDocument((res: TextDocumentDidChangeEvent) => {
+                    //     //TODO: Try to get the response from the existing call or ask the websocket for given symbols
+                    //     createdConnection.sendRequest("syntax", res.textDocument.uri).then(res => { 
+                    //         var convertedResponse = res as [string,number][];
+                    //         if (!convertedResponse) return;
+
+                    //         var regexList = getRegEx(convertedResponse);
+                    //         MonacoOvlConfiguration.setTokenization(regexList);
+                    //     });
+                    // });
+
+                    // services.workspace.onDidOpenTextDocument((res: TextDocument) => {
+                    //     //TODO: Try to get the response from the existing call or ask the websocket for given symbols
+                    //     createdConnection.sendRequest("syntax", res.uri).then(res => { 
+                    //         var convertedResponse = res as [string,number][];
+                    //         if (!convertedResponse) return;
+
+                    //         var regexList = getRegEx(convertedResponse);
+                    //         MonacoOvlConfiguration.setTokenization(regexList);
+                    //     });
+                    // });
+
+                    return Promise.resolve(createdConnection)
                 }
             }
         });

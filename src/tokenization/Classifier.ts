@@ -1,5 +1,4 @@
 import { EndOfLineState, TokenClass } from "../monaco-configuration/Enums";
-import { ApiProxy } from "../rest-interface/ApiProxy";
 
 export class Classifier {
     public static validate(classificationRules: [RegExp, TokenClass][], line: string, lexState: EndOfLineState): ClassificationResult {
@@ -61,26 +60,28 @@ export class Classifier {
     private static async getDynamicRules(): Promise<[RegExp, TokenClass][]> {
         //TODO: How to get prevoiusly generated rules
         try {
-            var apiProxy = new ApiProxy();
-            var response = await apiProxy.getData();
+            // var apiProxy = new ApiProxy();
+            // var response = await apiProxy.getData();
 
-            if (response == null ||
-                response.data == null)
-                throw Error("Response of Dynamic Rules is empty");
+            // if (response == null ||
+            //     response.data == null)
+            //     throw Error("Response of Dynamic Rules is empty");
 
-            var dynamicRules: [RegExp, TokenClass][] = []
+            // var dynamicRules: [RegExp, TokenClass][] = []
 
-            for (let index = 0; index < response.data.length; index++) {
-                const element = response.data[index];
-                dynamicRules.push([new RegExp(element[0]), element[1]]);
-            }
+            // for (let index = 0; index < response.data.length; index++) {
+            //     const element = response.data[index];
+            //     dynamicRules.push([new RegExp(element[0]), element[1]]);
+            // }
 
-            return dynamicRules;
+            // return dynamicRules;
+
+            return [];
 
         } catch (err) {
             console.log(err);
+            return [];
         }
-        return [];
     }
 }
 

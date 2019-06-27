@@ -1,16 +1,15 @@
-import { createTokenizationSupport } from "../tokenization/tokenization";
 import { getTokenStringByTokenClass, TokenClass } from "./Enums";
+import { createTokenizationSupport } from "../tokenization/tokenization";
+import { ApiProxy } from "../rest/ApiService";
 
 export namespace MonacoOvlConfiguration {
-    export async function setConfiguration() {
+    export function setConfiguration() {
         // register Monaco languages
         monaco.languages.register({
             id: 'ovl',
             extensions: ['.ovl'],
             aliases: ['OVL', 'ovl', 'openVALIDATION'],
         });
-        
-        monaco.languages.setTokensProvider('ovl', createTokenizationSupport());
 
         // defines color of the defined languages
         monaco.editor.defineTheme('ovlTheme', {
@@ -25,5 +24,10 @@ export namespace MonacoOvlConfiguration {
             ],
             colors: {}
         });
+    }
+
+    export async function setTokenization(text: string) {
+        var returnList = await ApiProxy.postData(text);
+        monaco.languages.setTokensProvider('ovl', createTokenizationSupport(returnList));
     }
 }

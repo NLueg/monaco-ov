@@ -13,7 +13,7 @@
     "reconnecting-websocket": "^3.2.2",
     "request-light": "^0.2.2",
     "vscode-json-languageservice": "^3.3.0",
-    "vscode-languageserver": "^4.0.0",
+    "vscode-languageserver": "^5.2.1",
     "ws": "^5.0.0"
   },
   "devDependencies": {
