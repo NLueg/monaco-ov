@@ -2,7 +2,7 @@
  * Copyright (c) 2018 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
-import { DiagnosticCollection, Diagnostic } from './services';
+import { DiagnosticCollection, Diagnostic, DiagnosticSeverity } from './services';
 import { DisposableCollection, Disposable } from './disposable';
 import { ProtocolToMonacoConverter } from './monaco-converter';
 import IModel = monaco.editor.IModel;
@@ -29,6 +29,7 @@ export class MonacoDiagnosticCollection implements DiagnosticCollection {
 
     set(uri: string, diagnostics: Diagnostic[]): void {
         const existing = this.diagnostics.get(uri);
+
         if (existing) {
             existing.diagnostics = diagnostics;
         } else {
@@ -85,6 +86,22 @@ export class MonacoModelDiagnostics implements Disposable {
     protected doUpdateModelMarkers(model: IModel | null): void {
         if (model && this.uri.toString() === model.uri.toString()) {
             monaco.editor.setModelMarkers(model, this.owner, this._markers);
+
+            //Sets icons on the left bar
+            let newDecorations = this.diagnostics.map(e => {
+                return {
+                    range: new monaco.Range(
+                        (e.range.start.line + 1),
+                        (e.range.start.character),
+                        (e.range.end.line + 1),
+                        (e.range.start.character)),
+                    options: {
+                        glyphMarginClassName: e.severity === DiagnosticSeverity.Error ? 'errorIcon' : 'warningIcon',
+                        glyphMarginHoverMessage: { value: e.message }
+                    }
+                }
+            });
+            model.deltaDecorations([], newDecorations);
         }
     }
 }

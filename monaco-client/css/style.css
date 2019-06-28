@@ -1,11 +1,11 @@
 body {
     background-color: #bbb!important;
-    font-family: Segoe UI,Tahoma,Geneva,Verdana,sans-serif!important;
+    font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif!important;
     overflow-x: hidden;
 }
 
 #logo {
-    position: absolute;    
+    position: absolute;
     left: 5%;
     top: 3%;
     width: 130px;
@@ -25,7 +25,9 @@ body {
     overflow: hidden;
 }
 
-#monaco-editor, #generated-code, #schema-definition {
+#monaco-editor,
+#generated-code,
+#schema-definition {
     font-size: 1em;
     height: 100%;
     width: 100%;
@@ -40,8 +42,8 @@ body {
     text-align: left;
     padding: 0;
     margin: 0;
-    -webkit-box-shadow: 5px 5px 10px 0 rgba(0,0,0,.1);
-    box-shadow: 5px 5px 10px 0 rgba(0,0,0,.1);
+    -webkit-box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, .1);
+    box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, .1);
     overflow-x: hidden;
     -webkit-transition: all .5s;
     transition: all .5s;
@@ -66,4 +68,18 @@ body {
     background-color: #eee;
     bottom: 15px;
     right: 15px;
+}
+
+.warningIcon {
+    display: block;
+    background-image: url('../images/warningIcon.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.errorIcon {
+    display: block;
+    background-image: url('../images/errorIcon.png');
+    background-size: contain;
+    background-repeat: no-repeat;
 }
