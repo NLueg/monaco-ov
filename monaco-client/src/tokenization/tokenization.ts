@@ -11,9 +11,8 @@ function getRegEx(stringList : [string,TokenClass][]) : [RegExp, TokenClass][] {
 	var returnList : [RegExp, TokenClass][] = [];
 
 	stringList.forEach((element) => {
-		returnList.push([new RegExp(element[0]), element[1]]);
+		returnList.push([new RegExp(element[0], "g"), element[1]]);
 	});
 
-	console.log(returnList);
 	return returnList;
 }

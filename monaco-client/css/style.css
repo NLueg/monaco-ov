@@ -34,7 +34,6 @@ body {
 .panel {
     overflow: hidden;
     background-color: #eee;
-    border-top-left-radius: 10px;
     position: absolute;
     width: 48.7%;
     height: 48.7%;
@@ -50,6 +49,7 @@ body {
 
 .panel.rule {
     border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
     left: 15px;
     top: 0;
     height: 97.4%;
@@ -62,8 +62,8 @@ body {
 }
 
 .panel.schema {
+    border-bottom-right-radius: 10px;
     background-color: #eee;
-    border-bottom-left-radius: 10px;
     bottom: 15px;
     right: 15px;
 }

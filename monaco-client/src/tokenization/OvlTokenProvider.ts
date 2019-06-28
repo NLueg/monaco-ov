@@ -3,7 +3,7 @@ import { Classifier } from "./Classifier";
 import { TokenizationState } from "./TokenizationState";
 
 export class OvlTokenProvider implements monaco.languages.TokensProvider {
-    constructor(private readonly classifier: [RegExp, TokenClass][]) {
+    constructor(private readonly classificationRules: [RegExp, TokenClass][]) {
      }
 
     getInitialState(): monaco.languages.IState {
@@ -17,23 +17,22 @@ export class OvlTokenProvider implements monaco.languages.TokensProvider {
             endState: new TokenizationState(EndOfLineState.None, false)
         };
 
-        var result = Classifier.validate(this.classifier, line, (state).eolState), offset = 0;
+        var result = Classifier.validate(this.classificationRules, line, (state).eolState);
         ret.endState.eolState = result.endOfLineState;
         ret.endState.inJsDocComment = result.endOfLineState === EndOfLineState.InMultiLineComment && (state.inJsDocComment || /\/\*\*.*$/.test(line));
         for (let entry of result.entries) {
             if (entry.classification === TokenClass.Comment) {
                 // comments: check for JSDoc, block, and line comments
-                if (ret.endState.inJsDocComment || /\/\*\*.*\*\//.test(line.substr(offset, entry.length))) {
-                    this.appendToken(offset, getTokenStringByTokenClass(TokenClass.Comment), ret);
+                if (ret.endState.inJsDocComment || /\/\*\*.*\*\//.test(line.substr(entry.start, entry.length))) {
+                    this.appendToken(entry.start, getTokenStringByTokenClass(TokenClass.Comment), ret);
                 }
                 else {
-                    this.appendToken(offset, getTokenStringByTokenClass(TokenClass.Comment), ret);
+                    this.appendToken(entry.start, getTokenStringByTokenClass(TokenClass.Comment), ret);
                 }
             }
             else {
-                this.appendToken(offset, getTokenStringByTokenClass(entry.classification), ret);
+                this.appendToken(entry.start, getTokenStringByTokenClass(entry.classification), ret);
             }
-            offset += entry.length;
         }
         return ret;
     }

@@ -1,6 +1,7 @@
 export enum EndOfLineState {
     None,
-    InMultiLineComment
+    InMultiLineComment,
+    InMultilineString
 }
 
 export enum TokenClass {

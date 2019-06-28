@@ -9,8 +9,8 @@
         "declaration": true,
         "stripInternal": true,
         "lib": [
-        "es2016",
-        "dom"
+            "es2016",
+            "dom"
         ],
         "strict": true,
         "noImplicitReturns": true,

@@ -8,13 +8,14 @@ export class Classifier {
         var wordList = line.split(/(\s+)/);
         var previousClassification: TokenClass =
             (lexState === EndOfLineState.InMultiLineComment && line.trim() !== "")
-                ? TokenClass.Comment    // Multiline Comment
-                : TokenClass.Punctuation;      // Default
+                ? TokenClass.Comment        // Multiline Comment
+                : TokenClass.Punctuation;   // Default //TODO: Enable Multi line string (for DANN ...)
 
         wordList.forEach(word => {
             //Comments are in the whole line
             if (previousClassification === TokenClass.Comment) {
                 entries.push({
+                    start: line.indexOf(word),
                     length: word.length,
                     classification: previousClassification
                 });
@@ -26,6 +27,7 @@ export class Classifier {
 
                     if (classification !== null) {
                         entries.push({
+                            start: line.indexOf(word),
                             length: word.length,
                             classification: classification
                         });
@@ -36,9 +38,12 @@ export class Classifier {
             }
         });
 
+
         var lastState = String(previousClassification) === String(TokenClass.Comment)
             ? EndOfLineState.InMultiLineComment
-            : EndOfLineState.None;
+            : String(previousClassification) === String(TokenClass.StringLiteral)
+                ? EndOfLineState.InMultilineString
+                : EndOfLineState.None;
 
         return {
             endOfLineState: lastState,
@@ -46,43 +51,11 @@ export class Classifier {
         };
     }
 
-    public static async getClassificationRules(): Promise<[RegExp, TokenClass][]> {
-        var dynamicRules: [RegExp, TokenClass][] = await this.getDynamicRules();
-        return dynamicRules.concat(this.staticRules);
-    }
-
-    private static staticRules: [RegExp, TokenClass][] = [
-        [/[0-9]+.[0-9]*/, TokenClass.NumberLiteral],
-        [/[ ^$]/, TokenClass.Whitespace],
-        [/[a-zA-Z]/, TokenClass.Punctuation]
-    ];
-
-    private static async getDynamicRules(): Promise<[RegExp, TokenClass][]> {
-        //TODO: How to get prevoiusly generated rules
-        try {
-            // var apiProxy = new ApiProxy();
-            // var response = await apiProxy.getData();
-
-            // if (response == null ||
-            //     response.data == null)
-            //     throw Error("Response of Dynamic Rules is empty");
-
-            // var dynamicRules: [RegExp, TokenClass][] = []
-
-            // for (let index = 0; index < response.data.length; index++) {
-            //     const element = response.data[index];
-            //     dynamicRules.push([new RegExp(element[0]), element[1]]);
-            // }
-
-            // return dynamicRules;
-
-            return [];
-
-        } catch (err) {
-            console.log(err);
-            return [];
-        }
-    }
+    // private static staticRules: [RegExp, TokenClass][] = [
+    //     [/[0-9]+.[0-9]*/, TokenClass.NumberLiteral],
+    //     [/[ ^$]/, TokenClass.Whitespace],
+    //     [/[a-zA-Z]/, TokenClass.Punctuation]
+    // ];
 }
 
 export interface ClassificationResult {
@@ -91,6 +64,7 @@ export interface ClassificationResult {
 }
 
 export interface ClassificationInfo {
+    start: number;
     length: number;
     classification: TokenClass;
 }

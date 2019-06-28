@@ -59,7 +59,7 @@ export module LspClient {
             },
             // create a language client connection from the JSON RPC connection on demand
             connectionProvider: {
-                get: (errorHandler, closeHandler) => {
+                get: (errorHandler, closeHandler)  => {
                     //TODO: ERROR, when LSP restarts, maybe just use REST for now
                     var createdConnection = createConnection(connection, errorHandler, closeHandler);
 
@@ -85,7 +85,7 @@ export module LspClient {
                     //     });
                     // });
 
-                    return Promise.resolve(createdConnection)
+                    return Promise.resolve(createdConnection);
                 }
             }
         });
