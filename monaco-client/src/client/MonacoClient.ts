@@ -1,7 +1,7 @@
 import { MonacoOvlConfiguration } from "../monaco-configuration/MonacoOvlConfiguration";
 
 export class MonacoClient {
-    public static async createEditor() : Promise<monaco.editor.IStandaloneCodeEditor> {
+    public static async createEditor(): Promise<monaco.editor.IStandaloneCodeEditor> {
         var editor = monaco.editor.create(document.getElementById("monaco-editor")!, {
             model: monaco.editor.createModel(this.initialValue, 'ovl', monaco.Uri.parse('inmemory://model.ovl')),
             theme: 'ovlTheme',
@@ -13,7 +13,7 @@ export class MonacoClient {
         });
 
         MonacoOvlConfiguration.setConfiguration();
-        await MonacoOvlConfiguration.setTokenization(this.initialValue);
+        await MonacoOvlConfiguration.setTokenizationRestApi(this.initialValue);
 
         return editor;
     }
@@ -25,31 +25,31 @@ DANN Sie müssen mindestens 18 Jahre alt sein
     das Alter des Bewerbers ist KLEINER 18
 ALS  Minderjährig
 
-WENN der Bewerber Minderjährig ist
- UND sein Wohnort ist NICHT Dortmund
-DANN Sie müssen mindestens 18 Jahre alt sein und aus Dortmund kommen
-
-WENN der Bewerber Minderjährig ist
-    ODER seine Berufserfahrung ist KÜRZER als 5 Jahre
-DANN Sie müssen mindestens 18 Jahre alt sein und über eine Berufserfahrung
-        von minimum 5 Jahren verfügen
-
-KOMMENTAR Dies ist ein Kommentar
-            Und hier auch...
-
-    SUMME VON Einkaufsliste.Preis
-ALS Ausgaben
-
-das Alter des Bewerbers MUSS MINDESTENS 18 sein
-
-    ( 20 - 18 ) * 12
-ALS Berufserfahrung in Monaten
-
-    OPERAND  Alter
-OPERATOR  KLEINER
-        ALS  JÜNGER
-
 `;
+    // WENN der Bewerber Minderjährig ist
+    //  UND sein Wohnort ist NICHT Dortmund
+    // DANN Sie müssen mindestens 18 Jahre alt sein und aus Dortmund kommen
+
+    // WENN der Bewerber Minderjährig ist
+    //     ODER seine Berufserfahrung ist KÜRZER als 5 Jahre
+    // DANN Sie müssen mindestens 18 Jahre alt sein und über eine Berufserfahrung
+    //         von minimum 5 Jahren verfügen
+
+    // KOMMENTAR Dies ist ein Kommentar
+    //             Und hier auch...
+
+    //     SUMME VON Einkaufsliste.Preis
+    // ALS Ausgaben
+
+    // das Alter des Bewerbers MUSS MINDESTENS 18 sein
+
+    //     ( 20 - 18 ) * 12
+    // ALS Berufserfahrung in Monaten
+
+    //     OPERAND  Alter
+    // OPERATOR  KLEINER
+    //         ALS  JÜNGER
+
     // die Ausgaben DÜRFEN NICHT das Budget von 20 € ÜBERSTEIGEN
 
     // Der Bewerber DARF NICHT JÜNGER als 18 sein

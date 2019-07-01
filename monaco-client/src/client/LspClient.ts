@@ -5,6 +5,7 @@ import {
 } from 'monaco-languageclient';
 import normalizeUrl = require('normalize-url');
 import { MonacoOvlConfiguration } from '../monaco-configuration/MonacoOvlConfiguration';
+import { TokenClass } from 'src/monaco-configuration/Enums';
 
 const ReconnectingWebSocket = require('reconnecting-websocket');
 
@@ -13,6 +14,36 @@ export module LspClient {
         // create the web socket
         const url = createUrl('/ovlLanguage');
         const webSocket = createWebSocket(url);
+
+        var valueCode = `huml.appendRule("",
+        ["name"],
+        "your name HAS to be Validaria",
+        function(model) { 
+            return huml.NOT_EQUALS(model.name, "Validaria");
+        },
+        false
+        );`;
+        monaco.editor.create(document.getElementById("generated-code")!, {
+            model: monaco.editor.createModel(valueCode, 'java', monaco.Uri.parse('inmemory://model.java')),
+            theme: 'ovlTheme',
+            readOnly: true,
+            automaticLayout: true,
+            glyphMargin: true,
+            lightbulb: {
+                enabled: true
+            }
+        });
+
+        var valueSchema = `Name: Satoshi \nAlter: 25 \nOrt: Dortmund`;
+        monaco.editor.create(document.getElementById("schema-definition")!, {
+            model: monaco.editor.createModel(valueSchema, 'yaml', monaco.Uri.parse('inmemory://model.yaml')),
+            theme: 'vs-dark',
+            automaticLayout: true,
+            glyphMargin: true,
+            lightbulb: {
+                enabled: true
+            }
+        });
 
         // install Monaco language client services
         var services = MonacoServices.install(editor);
@@ -25,21 +56,47 @@ export module LspClient {
                 // create and start the language client
                 const languageClient = createLanguageClient(connection, services);
                 const disposable = languageClient.start();
+
+                connection.onDispose(() => disposable.dispose());
                 connection.onClose(() => disposable.dispose());
 
                 await languageClient.onReady;
+
                 services.workspace.onDidChangeTextDocument(async (res: TextDocumentDidChangeEvent) => {
-                    MonacoOvlConfiguration.setTokenization(res.textDocument.getText());
+                    await languageClient.onReady;
 
-                    // //TODO: How to dispose the listener and/or use the newest connection
-                    // //TODO: Try to get the response from the existing call or ask the websocket for given symbols
-                    // connection.sendRequest("syntax", res.textDocument.uri).then(res => {
-                    //     var convertedResponse = res as [string, number][];
-                    //     if (!convertedResponse) return;
 
-                    //     var regexList = getRegEx(convertedResponse);
-                    //     MonacoOvlConfiguration.setTokenization(regexList);
-                    // });
+                    //TODO: Renew the reference to the language-client or just reload the handler
+                    try {
+
+                        if (res.textDocument.languageId == "yaml") {
+                            languageClient.sendNotification("schemaChanged", res.textDocument.getText());
+                        }
+
+                        //TODO: Trigger on click
+                        languageClient.sendNotification("languageChanged", "java");
+                        languageClient.sendNotification("cultureChanged", "de");
+
+                        if (res.textDocument.languageId == "ovl") {
+                            var response = await languageClient.sendRequest("syntax", res.textDocument.uri) as [string,TokenClass][];
+                            if (!response) return;
+
+                            MonacoOvlConfiguration.setTokenization(response);
+                        }
+
+                        // MonacoOvlConfiguration.setTokenization(res.textDocument.getText());
+
+                        // //TODO: How to dispose the listener and/or use the newest connection
+                        // //TODO: Try to get the response from the existing call or ask the websocket for given symbols
+                        // connection.sendRequest("syntax", res.textDocument.uri).then(res => {
+                        //     var convertedResponse = res as [string, number][];
+                        //     if (!convertedResponse) return;
+
+                        //     var regexList = getRegEx(convertedResponse);
+                        //     MonacoOvlConfiguration.setTokenization(regexList);
+                        // });
+                    } catch (err) {
+                    }
                 });
             }
         });
@@ -59,7 +116,7 @@ export module LspClient {
             },
             // create a language client connection from the JSON RPC connection on demand
             connectionProvider: {
-                get: (errorHandler, closeHandler)  => {
+                get: (errorHandler, closeHandler) => {
                     //TODO: ERROR, when LSP restarts, maybe just use REST for now
                     var createdConnection = createConnection(connection, errorHandler, closeHandler);
 

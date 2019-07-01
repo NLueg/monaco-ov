@@ -105,7 +105,7 @@ export class MonacoLanguages implements Languages {
     registerHoverProvider(selector: DocumentSelector, provider: HoverProvider): Disposable {
         const hoverProvider = this.createHoverProvider(selector, provider);
         const providers = new DisposableCollection();
-        
+
         for (const language of getLanguages()) {
             if (this.matchLanguage(selector, language)) {
                 providers.push(monaco.languages.registerHoverProvider(language, hoverProvider));

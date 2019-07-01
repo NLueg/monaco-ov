@@ -7,6 +7,7 @@ import { DisposableCollection, Disposable } from './disposable';
 import { ProtocolToMonacoConverter } from './monaco-converter';
 import IModel = monaco.editor.IModel;
 import IMarkerData = monaco.editor.IMarkerData;
+import IModelDeltaDecoration = monaco.editor.IModelDeltaDecoration;
 
 export class MonacoDiagnosticCollection implements DiagnosticCollection {
 
@@ -48,6 +49,8 @@ export class MonacoModelDiagnostics implements Disposable {
     readonly uri: monaco.Uri;
     protected _markers: IMarkerData[] = [];
     protected _diagnostics: Diagnostic[] = [];
+    protected _decorations: IModelDeltaDecoration[] = [];
+
     constructor(
         uri: string,
         diagnostics: Diagnostic[],
@@ -87,8 +90,8 @@ export class MonacoModelDiagnostics implements Disposable {
         if (model && this.uri.toString() === model.uri.toString()) {
             monaco.editor.setModelMarkers(model, this.owner, this._markers);
 
-            //Sets icons on the left bar
-            let newDecorations = this.diagnostics.map(e => {
+            //TODO: Delete old decorations
+            this._decorations = this.diagnostics.map(e => {
                 return {
                     range: new monaco.Range(
                         (e.range.start.line + 1),
@@ -101,7 +104,7 @@ export class MonacoModelDiagnostics implements Disposable {
                     }
                 }
             });
-            model.deltaDecorations([], newDecorations);
+            model.deltaDecorations([], this._decorations);
         }
     }
 }

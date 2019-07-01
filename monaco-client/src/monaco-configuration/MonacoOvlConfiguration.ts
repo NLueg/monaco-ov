@@ -26,7 +26,11 @@ export namespace MonacoOvlConfiguration {
         });
     }
 
-    export async function setTokenization(text: string) {
+    export async function setTokenization(returnList: [string,TokenClass][]) {
+        monaco.languages.setTokensProvider('ovl', createTokenizationSupport(returnList));
+    }
+
+    export async function setTokenizationRestApi(text: string) {
         var returnList = await ApiProxy.postData(text);
         monaco.languages.setTokensProvider('ovl', createTokenizationSupport(returnList));
     }
