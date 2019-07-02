@@ -2,7 +2,7 @@ import { getTokenStringByTokenClass, TokenClass } from "./Enums";
 import { createTokenizationSupport } from "../tokenization/tokenization";
 import { ApiProxy } from "../rest/ApiService";
 
-export namespace MonacoOvlConfiguration {
+export namespace MonacoOvConfiguration {
     export function setConfiguration() {
         // register Monaco languages
         monaco.languages.register({

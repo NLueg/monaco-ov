@@ -1,10 +1,10 @@
 'use strict';
 
-import { OvlTokenProvider } from "./OvlTokenProvider";
+import { OvTokenProvider } from "./OvTokenProvider";
 import { TokenClass } from "../monaco-configuration/enums";
 
 export async function createTokenizationSupport(classifiers: [string, TokenClass][]): Promise<monaco.languages.TokensProvider> {
-	return new OvlTokenProvider(getRegEx(classifiers));
+	return new OvTokenProvider(getRegEx(classifiers));
 }
 
 function getRegEx(stringList: [string, TokenClass][]): [RegExp, TokenClass][] {

@@ -2,7 +2,7 @@ import { EndOfLineState, TokenClass, getTokenStringByTokenClass } from "../monac
 import { Classifier } from "./Classifier";
 import { TokenizationState } from "./TokenizationState";
 
-export class OvlTokenProvider implements monaco.languages.TokensProvider {
+export class OvTokenProvider implements monaco.languages.TokensProvider {
     constructor(private readonly classificationRules: [RegExp, TokenClass][]) {
      }
 
