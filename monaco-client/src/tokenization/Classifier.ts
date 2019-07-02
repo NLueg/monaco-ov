@@ -38,7 +38,6 @@ export class Classifier {
             }
         });
 
-
         var lastState = String(previousClassification) === String(TokenClass.Comment)
             ? EndOfLineState.InMultiLineComment
             : String(previousClassification) === String(TokenClass.StringLiteral)

@@ -16,13 +16,13 @@ export module LspClient {
         const webSocket = createWebSocket(url);
 
         var valueCode = `huml.appendRule("",
-        ["name"],
-        "your name HAS to be Validaria",
-        function(model) { 
-            return huml.NOT_EQUALS(model.name, "Validaria");
-        },
-        false
-        );`;
+["name"],
+"your name HAS to be Validaria",
+function(model) { 
+    return huml.NOT_EQUALS(model.name, "Validaria");
+},
+false
+);`;
         monaco.editor.create(document.getElementById("generated-code")!, {
             model: monaco.editor.createModel(valueCode, 'java', monaco.Uri.parse('inmemory://model.java')),
             theme: 'ovlTheme',
@@ -65,11 +65,10 @@ export module LspClient {
                 services.workspace.onDidChangeTextDocument(async (res: TextDocumentDidChangeEvent) => {
                     await languageClient.onReady;
 
-
                     //TODO: Renew the reference to the language-client or just reload the handler
                     try {
-
                         if (res.textDocument.languageId == "yaml") {
+                            //TODO: Update tokenization
                             languageClient.sendNotification("schemaChanged", res.textDocument.getText());
                         }
 
@@ -78,23 +77,11 @@ export module LspClient {
                         languageClient.sendNotification("cultureChanged", "de");
 
                         if (res.textDocument.languageId == "ovl") {
-                            var response = await languageClient.sendRequest("syntax", res.textDocument.uri) as [string,TokenClass][];
+                            var response = await languageClient.sendRequest("syntax", res.textDocument.uri) as [string, TokenClass][];
                             if (!response) return;
 
                             MonacoOvlConfiguration.setTokenization(response);
                         }
-
-                        // MonacoOvlConfiguration.setTokenization(res.textDocument.getText());
-
-                        // //TODO: How to dispose the listener and/or use the newest connection
-                        // //TODO: Try to get the response from the existing call or ask the websocket for given symbols
-                        // connection.sendRequest("syntax", res.textDocument.uri).then(res => {
-                        //     var convertedResponse = res as [string, number][];
-                        //     if (!convertedResponse) return;
-
-                        //     var regexList = getRegEx(convertedResponse);
-                        //     MonacoOvlConfiguration.setTokenization(regexList);
-                        // });
                     } catch (err) {
                     }
                 });
