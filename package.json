@@ -1,0 +1,20 @@
+{
+  "name": "monaco-ovl",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "cd monaco-languageclient-base && npm install && cd ../monaco-client && npm install && cd .."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NLueg/monaco-languageclient.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NLueg/monaco-languageclient/issues"
+  },
+  "homepage": "https://github.com/NLueg/monaco-languageclient#readme"
+}

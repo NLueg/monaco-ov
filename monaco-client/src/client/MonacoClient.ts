@@ -1,10 +1,10 @@
-import { MonacoOvConfiguration } from "../monaco-configuration/MonacoOvConfiguration";
+import { MonacoOvlConfiguration } from "../monaco-configuration/MonacoOvlConfiguration";
 
 export class MonacoClient {
     public static async createEditor(): Promise<monaco.editor.IStandaloneCodeEditor> {
         var editor = monaco.editor.create(document.getElementById("monaco-editor")!, {
-            model: monaco.editor.createModel(this.initialValue, 'ov', monaco.Uri.parse('inmemory://model.ov')),
-            theme: 'ovTheme',
+            model: monaco.editor.createModel(this.initialValue, 'ovl', monaco.Uri.parse('inmemory://model.ovl')),
+            theme: 'ovlTheme',
             automaticLayout: true,
             glyphMargin: true,
             lightbulb: {
@@ -12,8 +12,8 @@ export class MonacoClient {
             }
         });
 
-        MonacoOvConfiguration.setConfiguration();
-        await MonacoOvConfiguration.setTokenizationRestApi(this.initialValue);
+        MonacoOvlConfiguration.setConfiguration();
+        await MonacoOvlConfiguration.setTokenizationRestApi(this.initialValue);
 
         return editor;
     }

@@ -1,58 +1,58 @@
 {
-    "private": true,
-    "name": "monaco-ov-languageclient",
-    "version": "0.0.1",
-    "dependencies": {
-        "@sourcegraph/vscode-ws-jsonrpc": "0.0.3-fork",
-        "axios": "^0.19.0",
-        "cpx": "^1.5.0",
-        "express": "^4.17.1",
-        "monaco-editor": "^0.17.0",
-        "monaco-languageclient": "file:../monaco-languageclient-base",
-        "nodemon": "^1.19.1",
-        "normalize-url": "^2.0.1",
-        "reconnecting-websocket": "^3.2.2",
-        "request-light": "^0.2.2",
-        "vscode-json-languageservice": "^3.3.0",
-        "vscode-languageserver": "^5.2.1",
-        "ws": "^5.0.0"
-    },
-    "devDependencies": {
-        "@types/express": "^4.17.0",
-        "@types/node": "^7.10.6",
-        "@types/normalize-url": "^1.9.1",
-        "@types/ws": "0.0.39",
-        "css-loader": "^3.0.0",
-        "rimraf": "^2.6.3",
-        "source-map-loader": "^0.2.3",
-        "style-loader": "^0.20.3",
-        "typescript": "^3.5.2",
-        "uglifyjs-webpack-plugin": "^1.2.4",
-        "url-loader": "^2.0.1",
-        "webpack": "^3.11.0",
-        "webpack-merge": "^4.2.1"
-    },
-    "scripts": {
-        "prepare": "npm run clean && npm run build",
-        "compile": "tsc",
-        "watch": "tsc -w",
-        "clean": "rimraf lib",
-        "copy": "cpx src/index.html lib",
-        "build": "npm run compile && webpack && npm run copy",
-        "start": "npm run build && node lib/server.js",
-        "start:watch": "nodemon"
-    },
-    "nodemonConfig": {
-        "ignore": [
-            "**/*.test.ts",
-            "**/*.spec.ts",
-            ".git",
-            "node_modules"
-        ],
-        "watch": [
-            "src"
-        ],
-        "exec": "npm start",
-        "ext": "ts"
-    }
+  "private": true,
+  "name": "monaco-ovl-languageclient",
+  "version": "0.0.1",
+  "dependencies": {
+    "@sourcegraph/vscode-ws-jsonrpc": "0.0.3-fork",
+    "axios": "^0.19.0",
+    "cpx": "^1.5.0",
+    "express": "^4.17.1",
+    "monaco-editor": "^0.17.0",
+    "monaco-languageclient": "file:../monaco-languageclient-base",
+    "nodemon": "^1.19.1",
+    "normalize-url": "^2.0.1",
+    "reconnecting-websocket": "^3.2.2",
+    "request-light": "^0.2.2",
+    "vscode-json-languageservice": "^3.3.0",
+    "vscode-languageserver": "^5.2.1",
+    "ws": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.0",
+    "@types/node": "^7.10.6",
+    "@types/normalize-url": "^1.9.1",
+    "@types/ws": "0.0.39",
+    "css-loader": "^3.0.0",
+    "rimraf": "^2.6.3",
+    "source-map-loader": "^0.2.3",
+    "style-loader": "^0.20.3",
+    "typescript": "^3.5.2",
+    "uglifyjs-webpack-plugin": "^1.2.4",
+    "url-loader": "^2.0.1",
+    "webpack": "^3.11.0",
+    "webpack-merge": "^4.2.1"
+  },
+  "scripts": {
+    "prepare": "npm run clean && npm run build",
+    "compile": "tsc",
+    "watch": "tsc -w",
+    "clean": "rimraf lib",
+    "copy": "cpx src/index.html lib",
+    "build": "npm run compile && webpack && npm run copy",
+    "start": "npm run build && node lib/server.js",
+    "start:watch": "nodemon"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "**/*.test.ts",
+      "**/*.spec.ts",
+      ".git",
+      "node_modules"
+    ],
+    "watch": [
+      "src"
+    ],
+    "exec": "npm start",
+    "ext": "ts"
+  }
 }
