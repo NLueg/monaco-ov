@@ -25,14 +25,14 @@ export class MonacoConfigurations implements Configurations {
 }
 
 export class MonacoWorkspaceConfiguration implements WorkspaceConfiguration {
-    private ovlConfiguration: OvlConfiguration;
+    private ovConfiguration: OvConfiguration;
 
     constructor() {
-        this.ovlConfiguration = new OvlConfiguration();
+        this.ovConfiguration = new OvConfiguration();
     }
 
     public toJSON(): any {
-        JSON.parse(this.ovlConfiguration.toString());
+        JSON.parse(this.ovConfiguration.toString());
     }
 
     get<T>(section: string): T | undefined;
@@ -41,13 +41,13 @@ export class MonacoWorkspaceConfiguration implements WorkspaceConfiguration {
 
     get(section: any, defaultValue?: any) {
         if (section === "language") {
-            return this.ovlConfiguration.language;
+            return this.ovConfiguration.language;
         }
         if (section === "culture") {
-            return this.ovlConfiguration.culture;
+            return this.ovConfiguration.culture;
         }
         if (section === "schema") {
-            return this.ovlConfiguration.schema;
+            return this.ovConfiguration.schema;
         }
         return defaultValue;
     }
@@ -61,7 +61,7 @@ export class MonacoWorkspaceConfiguration implements WorkspaceConfiguration {
 
 }
 
-export class OvlConfiguration {
+export class OvConfiguration {
     private _language: string;
     private _culture: string;
     private _schema: string;

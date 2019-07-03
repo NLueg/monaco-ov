@@ -6,13 +6,13 @@ export namespace MonacoOvConfiguration {
     export function setConfiguration() {
         // register Monaco languages
         monaco.languages.register({
-            id: 'ovl',
-            extensions: ['.ovl'],
-            aliases: ['OVL', 'ovl', 'openVALIDATION'],
+            id: 'ov',
+            extensions: ['.ov'],
+            aliases: ['OV', 'ov', 'openVALIDATION'],
         });
 
         // defines color of the defined languages
-        monaco.editor.defineTheme('ovlTheme', {
+        monaco.editor.defineTheme('ovTheme', {
             base: 'vs',
             inherit: false,
             rules: [
@@ -27,11 +27,11 @@ export namespace MonacoOvConfiguration {
     }
 
     export async function setTokenization(returnList: [string,TokenClass][]) {
-        monaco.languages.setTokensProvider('ovl', createTokenizationSupport(returnList));
+        monaco.languages.setTokensProvider('ov', createTokenizationSupport(returnList));
     }
 
     export async function setTokenizationRestApi(text: string) {
         var returnList = await ApiProxy.postData(text);
-        monaco.languages.setTokensProvider('ovl', createTokenizationSupport(returnList));
+        monaco.languages.setTokensProvider('ov', createTokenizationSupport(returnList));
     }
 }
