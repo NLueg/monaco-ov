@@ -26,22 +26,22 @@ DANN Sie müssen mindestens 18 Jahre alt sein und über eine Berufserfahrung
 KOMMENTAR Dies ist ein Kommentar
             Und hier auch...
 
-    SUMME VON Einkaufsliste.Preis
-ALS Ausgaben
+            `;
+//     SUMME VON Einkaufsliste.Preis
+// ALS Ausgaben
 
-das Alter des Bewerbers MUSS MINDESTENS 18 sein
+// das Alter des Bewerbers MUSS MINDESTENS 18 sein
 
-    ( 20 - 18 ) * 12
-ALS Berufserfahrung in Monaten
+//     ( 20 - 18 ) * 12
+// ALS Berufserfahrung in Monaten
 
-    OPERAND  Alter
-OPERATOR  KLEINER
-        ALS  JÜNGER
+//     OPERAND  Alter
+// OPERATOR  KLEINER
+//         ALS  JÜNGER
 
-die Ausgaben DÜRFEN NICHT das Budget von 20 € ÜBERSTEIGEN
+// die Ausgaben DÜRFEN NICHT das Budget von 20 € ÜBERSTEIGEN
 
-Der Bewerber DARF NICHT JÜNGER als 18 sein 
-        `;
+// Der Bewerber DARF NICHT JÜNGER als 18 sein 
         var editor = monaco.editor.create(document.getElementById("monaco-editor")!, {
             model: monaco.editor.createModel(initialValue, 'ov', monaco.Uri.parse('inmemory://model.ov')),
             theme: 'vs-dark',

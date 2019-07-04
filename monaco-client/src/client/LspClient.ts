@@ -1,7 +1,7 @@
 import { listen, MessageConnection } from '@sourcegraph/vscode-ws-jsonrpc';
 import {
     MonacoLanguageClient, CloseAction, ErrorAction,
-    MonacoServices, createConnection, SemanticHighlightingNotification
+    MonacoServices, createConnection
 } from 'monaco-languageclient';
 import normalizeUrl = require('normalize-url');
 import { TextMateTokenizer } from '../monaco-configuration/TextMateTokenizer';
@@ -9,6 +9,8 @@ import { TextMateTokenizer } from '../monaco-configuration/TextMateTokenizer';
 const ReconnectingWebSocket = require('reconnecting-websocket');
 
 export class LspClient {
+
+    private static tokenizer = new TextMateTokenizer();
 
     /**
      * Creates the language-client und connects it to the language-server
@@ -71,9 +73,8 @@ export class LspClient {
                 get: async (errorHandler, closeHandler) => {
                     var newConnection = await createConnection(connection, errorHandler, closeHandler);
 
-                    newConnection.onNotification(SemanticHighlightingNotification.type, (params) => {
-                        var tokenizer = new TextMateTokenizer();
-                        tokenizer.setTokenization(params);
+                    newConnection.onNotification("textDocument/semanticHighlighting", (params) => {
+                        this.tokenizer.setTokenization(params);
                     });
 
                     return Promise.resolve(newConnection);

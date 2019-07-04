@@ -1,4 +1,3 @@
-import { SemanticHighlightingParams } from "monaco-languageclient";
 import { loadWASM } from 'onigasm' // peer dependency of 'monaco-textmate'
 import { Registry } from 'monaco-textmate' // peer dependency
 import { wireTmGrammars } from 'monaco-editor-textmate';
@@ -23,7 +22,7 @@ export class TextMateTokenizer {
      * @param {SemanticHighlightingParams} params parameters send from the server
      * @memberof TextMateTokenizer
      */
-    public async setTokenization(params: SemanticHighlightingParams) {
+    public async setTokenization(params: object) {
         if (!this.wasmIsInitialized) {
             await loadWASM(require("./../../node_modules/onigasm/lib/onigasm.wasm"));
             this.wasmIsInitialized = true;
