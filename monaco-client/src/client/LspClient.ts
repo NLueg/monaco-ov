@@ -11,23 +11,37 @@ const ReconnectingWebSocket = require('reconnecting-websocket');
 export class LspClient {
 
     private static tokenizer = new TextMateTokenizer();
+    private static outputEditor : monaco.editor.IStandaloneCodeEditor;
+    private static schemaEditor : monaco.editor.IStandaloneCodeEditor;
 
     /**
      * Creates the language-client und connects it to the language-server
      *
      * @static
-     * @param {monaco.editor.IStandaloneCodeEditor} editor the monaco-editor which 
+     * @param {monaco.editor.IStandaloneCodeEditor} ovlEditor the monaco-editor which 
      *          needs to be connected to the language server
+     * @param {monaco.editor.IStandaloneCodeEditor} schemaEditor the editor for the 
+     *          schema definition in ov
+     * @param {monaco.editor.IStandaloneCodeEditor} outputEditor the editor which displays
+     *          the generated source-code
      * @memberof LspClient
      */
-    public static createLspClient(editor: monaco.editor.IStandaloneCodeEditor) {
+    public static createLspClient(
+        ovlEditor: monaco.editor.IStandaloneCodeEditor,
+        schemaEditor: monaco.editor.IStandaloneCodeEditor,
+        outputEditor: monaco.editor.IStandaloneCodeEditor
+    ) {
+        this.outputEditor = outputEditor;
+        this.schemaEditor = schemaEditor;
+        console.log(this.schemaEditor);
+
         // create the web socket
         const url = this.createUrl('/ovLanguage');
         const webSocket = this.createWebSocket(url);
 
         // install Monaco language client services
-        MonacoServices.install(editor);
-
+        MonacoServices.install(ovlEditor);
+        
         // listen when the web socket is opened
         listen({
             webSocket,
@@ -75,6 +89,18 @@ export class LspClient {
 
                     newConnection.onNotification("textDocument/semanticHighlighting", (params) => {
                         this.tokenizer.setTokenization(params);
+                    });
+
+                    newConnection.onNotification("textDocument/generatedCode", (param) => {
+                        var paramJson = JSON.parse(param);
+                        var language = paramJson.language.toLowerCase();
+                        var value = paramJson.value;
+                        
+                        var currentModel = this.outputEditor.getModel()
+                        if (currentModel) {
+                            currentModel.setValue(value);
+                            monaco.editor.setModelLanguage(currentModel, language);
+                        }
                     });
 
                     return Promise.resolve(newConnection);

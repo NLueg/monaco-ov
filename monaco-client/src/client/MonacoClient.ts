@@ -108,9 +108,4 @@ false
 
         return editor;
     }
-
-
-
-
-
 }

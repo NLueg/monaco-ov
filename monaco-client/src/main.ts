@@ -22,10 +22,9 @@ createEditors();
 async function createEditors() {
     MonacoOvConfiguration.setOvLanguageSupport();
 
-    var ovlClient = await MonacoClientCreator.createOvlEditor();
-    LspClient.createLspClient(ovlClient);
+    var ovlEditor = await MonacoClientCreator.createOvlEditor();
+    var schemaEditor = await MonacoClientCreator.createSchemaEditor();
+    var outputEditor = await MonacoClientCreator.createOutputEditor();
+    LspClient.createLspClient(ovlEditor, schemaEditor, outputEditor);
 
-    await MonacoClientCreator.createSchemaEditor();
-
-    await MonacoClientCreator.createOutputEditor();
 }
