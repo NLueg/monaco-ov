@@ -88,7 +88,7 @@ KOMMENTAR Dies ist ein Kommentar
     public static async createSchemaEditor(): Promise<monaco.editor.IStandaloneCodeEditor> {
         var valueSchema = `Name: Satoshi \nAlter: 25 \nOrt: Dortmund`;
         var editor = monaco.editor.create(document.getElementById("schema-definition")!, {
-            model: monaco.editor.createModel(valueSchema, 'yaml', monaco.Uri.parse('inmemory://model.yaml')),
+            model: monaco.editor.createModel(valueSchema, 'yaml', monaco.Uri.parse('inmemory://schemaDefinition.yaml')),
             theme: 'vs-dark',
             automaticLayout: true,
             glyphMargin: true,

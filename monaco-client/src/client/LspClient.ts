@@ -1,7 +1,7 @@
 import { listen, MessageConnection } from '@sourcegraph/vscode-ws-jsonrpc';
 import {
     MonacoLanguageClient, CloseAction, ErrorAction,
-    MonacoServices, createConnection
+    MonacoServices, createConnection, IConnection
 } from 'monaco-languageclient';
 import normalizeUrl = require('normalize-url');
 import { TextMateTokenizer } from '../monaco-configuration/TextMateTokenizer';
@@ -11,8 +11,10 @@ const ReconnectingWebSocket = require('reconnecting-websocket');
 export class LspClient {
 
     private static tokenizer = new TextMateTokenizer();
-    private static outputEditor : monaco.editor.IStandaloneCodeEditor;
-    private static schemaEditor : monaco.editor.IStandaloneCodeEditor;
+    private static outputEditor: monaco.editor.IStandaloneCodeEditor;
+    private static schemaEditor: monaco.editor.IStandaloneCodeEditor;
+    private static monacoServices: MonacoServices;
+    private static currentConnection: IConnection;
 
     /**
      * Creates the language-client und connects it to the language-server
@@ -33,15 +35,14 @@ export class LspClient {
     ) {
         this.outputEditor = outputEditor;
         this.schemaEditor = schemaEditor;
-        console.log(this.schemaEditor);
+        this.monacoServices = MonacoServices.install(ovlEditor);
 
         // create the web socket
         const url = this.createUrl('/ovLanguage');
         const webSocket = this.createWebSocket(url);
 
         // install Monaco language client services
-        MonacoServices.install(ovlEditor);
-        
+
         // listen when the web socket is opened
         listen({
             webSocket,
@@ -59,7 +60,7 @@ export class LspClient {
         });
     }
 
-    
+
     /**
      * Creates the MonacoLanguageClient which is the language-client
      *  and communicates with the language-server
@@ -85,17 +86,17 @@ export class LspClient {
             // create a language client connection from the JSON RPC connection on demand
             connectionProvider: {
                 get: async (errorHandler, closeHandler) => {
-                    var newConnection = await createConnection(connection, errorHandler, closeHandler);
+                    this.currentConnection = await createConnection(connection, errorHandler, closeHandler);
 
-                    newConnection.onNotification("textDocument/semanticHighlighting", (params) => {
+                    this.currentConnection.onNotification("textDocument/semanticHighlighting", (params) => {
                         this.tokenizer.setTokenization(params);
                     });
 
-                    newConnection.onNotification("textDocument/generatedCode", (param) => {
+                    this.currentConnection.onNotification("textDocument/generatedCode", (param) => {
                         var paramJson = JSON.parse(param);
                         var language = paramJson.language.toLowerCase();
                         var value = paramJson.value;
-                        
+
                         var currentModel = this.outputEditor.getModel()
                         if (currentModel) {
                             currentModel.setValue(value);
@@ -103,13 +104,20 @@ export class LspClient {
                         }
                     });
 
-                    return Promise.resolve(newConnection);
+                    this.monacoServices.workspace.onDidChangeTextDocument((event) => {
+                        if (event.textDocument.languageId == "yaml") {
+                            console.log(this.schemaEditor.getValue())
+                            this.currentConnection.sendNotification("textDocument/schemaChanged", this.schemaEditor.getValue());
+                        }
+                    });
+
+                    return Promise.resolve(this.currentConnection);
                 }
             }
         });
     }
 
-    
+
     /**
      * Creates the URL to the websocket we want to connect to
      *
