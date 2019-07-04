@@ -64,16 +64,8 @@ KOMMENTAR Dies ist ein Kommentar
      * @memberof MonacoClient
      */
     public static async createOutputEditor(): Promise<monaco.editor.IStandaloneCodeEditor> {
-        var valueCode = `huml.appendRule("",
-["name"],
-"your name HAS to be Validaria",
-function(model) { 
-    return huml.NOT_EQUALS(model.name, "Validaria");
-},
-false
-);`;
         var editor = monaco.editor.create(document.getElementById("generated-code")!, {
-            model: monaco.editor.createModel(valueCode, 'java', monaco.Uri.parse('inmemory://model.java')),
+            model: monaco.editor.createModel("", 'java', monaco.Uri.parse('inmemory://model.java')),
             theme: 'vs-dark',
             readOnly: true,
             automaticLayout: true,
@@ -85,7 +77,6 @@ false
 
         return editor;
     }
-
 
     /**
      * Created the monaco editor for the schema-definition for openVALIDATION
