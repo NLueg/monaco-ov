@@ -1,6 +1,8 @@
 import { getTokenStringByTokenClass, TokenClass } from "./Enums";
-import { createTokenizationSupport } from "../tokenization/tokenization";
-import { ApiProxy } from "../rest/ApiService";
+import { SemanticHighlightingParams } from "monaco-languageclient";
+import { loadWASM } from 'onigasm' // peer dependency of 'monaco-textmate'
+import { Registry } from 'monaco-textmate' // peer dependency
+import { wireTmGrammars } from 'monaco-editor-textmate';
 
 export namespace MonacoOvConfiguration {
     export function setConfiguration() {
@@ -26,12 +28,26 @@ export namespace MonacoOvConfiguration {
         });
     }
 
-    export async function setTokenization(returnList: [string,TokenClass][]) {
-        monaco.languages.setTokensProvider('ov', createTokenizationSupport(returnList));
+    export async function setTokenization(params: SemanticHighlightingParams) {
+        await liftOff(params)
     }
 
-    export async function setTokenizationRestApi(text: string) {
-        var returnList = await ApiProxy.postData(text);
-        monaco.languages.setTokensProvider('ov', createTokenizationSupport(returnList));
-    }
+	async function liftOff(params: SemanticHighlightingParams) {
+		await loadWASM(require("./../../node_modules/onigasm/lib/onigasm.wasm"));
+	
+		const registry = new Registry({
+			getGrammarDefinition: async (scopeName) => {
+				return {
+					format: 'json',
+					content: await params.lines[0].tokens!
+				}
+			}
+		});
+	
+		// map of monaco "language id's" to TextMate scopeNames
+		const grammars = new Map()
+		grammars.set('ov', 'source.ov')
+	
+		await wireTmGrammars(monaco, registry, grammars);
+	}
 }

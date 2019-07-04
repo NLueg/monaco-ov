@@ -1,11 +1,10 @@
 import { listen, MessageConnection } from '@sourcegraph/vscode-ws-jsonrpc';
 import {
     MonacoLanguageClient, CloseAction, ErrorAction,
-    MonacoServices, createConnection, TextDocumentDidChangeEvent
+    MonacoServices, createConnection, SemanticHighlightingNotification
 } from 'monaco-languageclient';
 import normalizeUrl = require('normalize-url');
 import { MonacoOvConfiguration } from '../monaco-configuration/MonacoOvConfiguration';
-import { TokenClass } from 'src/monaco-configuration/Enums';
 
 const ReconnectingWebSocket = require('reconnecting-websocket');
 
@@ -61,29 +60,6 @@ export module LspClient {
                 connection.onClose(() => disposable.dispose());
 
                 await languageClient.onReady;
-
-                services.workspace.onDidChangeTextDocument(async (res: TextDocumentDidChangeEvent) => {
-                    await languageClient.onReady;
-
-                    try {
-
-                        if (res.textDocument.languageId == "yaml") {
-                            languageClient.sendNotification("schemaChanged", res.textDocument.getText());
-                        }
-
-                        //TODO: Trigger on click
-                        languageClient.sendNotification("languageChanged", "java");
-                        languageClient.sendNotification("cultureChanged", "de");
-
-                        if (res.textDocument.languageId == "ov") {
-                            var response = await languageClient.sendRequest("syntax", res.textDocument.uri) as [string, TokenClass][];
-                            if (!response) return;
-
-                            MonacoOvConfiguration.setTokenization(response);
-                        }
-                    } catch (err) {
-                    }
-                });
             }
         });
     }
@@ -102,8 +78,12 @@ export module LspClient {
             },
             // create a language client connection from the JSON RPC connection on demand
             connectionProvider: {
-                get: (errorHandler, closeHandler) => {
-                    return Promise.resolve(createConnection(connection, errorHandler, closeHandler));
+                get: async (errorHandler, closeHandler) => {
+                    var newConnection = await createConnection(connection, errorHandler, closeHandler);
+
+                    newConnection.onNotification(SemanticHighlightingNotification.type, MonacoOvConfiguration.setTokenization);
+
+                    return Promise.resolve(newConnection);
                 }
             }
         });

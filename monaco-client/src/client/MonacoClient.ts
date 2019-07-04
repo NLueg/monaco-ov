@@ -13,7 +13,6 @@ export class MonacoClient {
         });
 
         MonacoOvConfiguration.setConfiguration();
-        await MonacoOvConfiguration.setTokenizationRestApi(this.initialValue);
 
         return editor;
     }

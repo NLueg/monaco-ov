@@ -36,6 +36,11 @@ const common = {
                     },
                   },
                 ],
+              },
+              {
+                test: /\.wasm$/,
+                loader: "file-loader",
+                type: "javascript/auto",
               }
         ]
     },
