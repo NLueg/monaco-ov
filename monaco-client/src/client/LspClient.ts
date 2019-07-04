@@ -9,8 +9,8 @@ import { TextMateTokenizer } from '../monaco-configuration/TextMateTokenizer';
 const ReconnectingWebSocket = require('reconnecting-websocket');
 
 export class LspClient {
-
     private static tokenizer = new TextMateTokenizer();
+    // private static ovlEditor: monaco.editor.IStandaloneCodeEditor;
     private static outputEditor: monaco.editor.IStandaloneCodeEditor;
     private static schemaEditor: monaco.editor.IStandaloneCodeEditor;
     private static monacoServices: MonacoServices;
@@ -33,6 +33,7 @@ export class LspClient {
         schemaEditor: monaco.editor.IStandaloneCodeEditor,
         outputEditor: monaco.editor.IStandaloneCodeEditor
     ) {
+        // this.ovlEditor = ovlEditor;
         this.outputEditor = outputEditor;
         this.schemaEditor = schemaEditor;
         this.monacoServices = MonacoServices.install(ovlEditor);
@@ -109,6 +110,8 @@ export class LspClient {
                             console.log(this.schemaEditor.getValue())
                             this.currentConnection.sendNotification("textDocument/schemaChanged", this.schemaEditor.getValue());
                         }
+
+                        //TODO: Trigger text-edit for ov-model
                     });
 
                     return Promise.resolve(this.currentConnection);
