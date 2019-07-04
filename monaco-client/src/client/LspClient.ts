@@ -4,48 +4,27 @@ import {
     MonacoServices, createConnection, SemanticHighlightingNotification
 } from 'monaco-languageclient';
 import normalizeUrl = require('normalize-url');
-import { MonacoOvConfiguration } from '../monaco-configuration/MonacoOvConfiguration';
+import { TextMateTokenizer } from '../monaco-configuration/TextMateTokenizer';
 
 const ReconnectingWebSocket = require('reconnecting-websocket');
 
-export module LspClient {
-    export function addAndCreateLanguageClient(editor: monaco.editor.IStandaloneCodeEditor) {
+export class LspClient {
+
+    /**
+     * Creates the language-client und connects it to the language-server
+     *
+     * @static
+     * @param {monaco.editor.IStandaloneCodeEditor} editor the monaco-editor which 
+     *          needs to be connected to the language server
+     * @memberof LspClient
+     */
+    public static createLspClient(editor: monaco.editor.IStandaloneCodeEditor) {
         // create the web socket
-        const url = createUrl('/ovLanguage');
-        const webSocket = createWebSocket(url);
-
-        var valueCode = `huml.appendRule("",
-        ["name"],
-        "your name HAS to be Validaria",
-        function(model) { 
-            return huml.NOT_EQUALS(model.name, "Validaria");
-        },
-        false
-        );`;
-        monaco.editor.create(document.getElementById("generated-code")!, {
-            model: monaco.editor.createModel(valueCode, 'java', monaco.Uri.parse('inmemory://model.java')),
-            theme: 'ovTheme',
-            readOnly: true,
-            automaticLayout: true,
-            glyphMargin: true,
-            lightbulb: {
-                enabled: true
-            }
-        });
-
-        var valueSchema = `Name: Satoshi \nAlter: 25 \nOrt: Dortmund`;
-        monaco.editor.create(document.getElementById("schema-definition")!, {
-            model: monaco.editor.createModel(valueSchema, 'yaml', monaco.Uri.parse('inmemory://model.yaml')),
-            theme: 'vs-dark',
-            automaticLayout: true,
-            glyphMargin: true,
-            lightbulb: {
-                enabled: true
-            }
-        });
+        const url = this.createUrl('/ovLanguage');
+        const webSocket = this.createWebSocket(url);
 
         // install Monaco language client services
-        var services = MonacoServices.install(editor);
+        MonacoServices.install(editor);
 
         // listen when the web socket is opened
         listen({
@@ -53,7 +32,7 @@ export module LspClient {
             onConnection: async connection => {
 
                 // create and start the language client
-                const languageClient = createLanguageClient(connection, services);
+                const languageClient = this.createLanguageClient(connection);
                 const disposable = languageClient.start();
 
                 connection.onDispose(() => disposable.dispose());
@@ -64,7 +43,18 @@ export module LspClient {
         });
     }
 
-    function createLanguageClient(connection: MessageConnection, services: MonacoServices): MonacoLanguageClient {
+    
+    /**
+     * Creates the MonacoLanguageClient which is the language-client
+     *  and communicates with the language-server
+     * 
+     * @private
+     * @static
+     * @param {MessageConnection} connection connection to the language-server
+     * @returns {MonacoLanguageClient} created client
+     * @memberof LspClient
+     */
+    private static createLanguageClient(connection: MessageConnection): MonacoLanguageClient {
         return new MonacoLanguageClient({
             name: "openVALIDATION Language Client",
             clientOptions: {
@@ -81,7 +71,10 @@ export module LspClient {
                 get: async (errorHandler, closeHandler) => {
                     var newConnection = await createConnection(connection, errorHandler, closeHandler);
 
-                    newConnection.onNotification(SemanticHighlightingNotification.type, MonacoOvConfiguration.setTokenization);
+                    newConnection.onNotification(SemanticHighlightingNotification.type, (params) => {
+                        var tokenizer = new TextMateTokenizer();
+                        tokenizer.setTokenization(params);
+                    });
 
                     return Promise.resolve(newConnection);
                 }
@@ -89,12 +82,32 @@ export module LspClient {
         });
     }
 
-    function createUrl(path: string): string {
+    
+    /**
+     * Creates the URL to the websocket we want to connect to
+     *
+     * @private
+     * @static
+     * @param {string} path path of the websocket of the language-server
+     * @returns {string} the generated path
+     * @memberof LspClient
+     */
+    private static createUrl(path: string): string {
         const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
         return normalizeUrl(`${protocol}://localhost:3000${location.pathname}${path}`);
     }
 
-    function createWebSocket(url: string): WebSocket {
+
+    /**
+     * Generates a websocket to the language-server
+     *
+     * @private
+     * @static
+     * @param {string} url url to the language-server
+     * @returns {WebSocket} the generated websocket
+     * @memberof LspClient
+     */
+    private static createWebSocket(url: string): WebSocket {
         const socketOptions = {
             maxReconnectionDelay: 10000,
             minReconnectionDelay: 1000,
