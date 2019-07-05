@@ -37,8 +37,8 @@ body {
     overflow: hidden;
     background-color: #eee;
     position: absolute;
-    width: 48.7%;
-    height: 48.7%;
+    width: 48.9%;
+    height: 49.5%;
     text-align: left;
     padding: 0;
     margin: 0;
@@ -53,20 +53,20 @@ body {
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
     left: 15px;
-    top: 0;
-    height: 97.4%;
+    top: 0px;
+    height: 100%;
 }
 
 .panel.code {
     border-top-right-radius: 10px;
     right: 15px;
-    top: 0;
+    top: 0px;
 }
 
 .panel.schema {
     border-bottom-right-radius: 10px;
     background-color: #eee;
-    bottom: 15px;
+    bottom: 0px;
     right: 15px;
 }
 

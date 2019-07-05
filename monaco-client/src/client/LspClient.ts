@@ -36,13 +36,14 @@ export class LspClient {
         // this.ovlEditor = ovlEditor;
         this.outputEditor = outputEditor;
         this.schemaEditor = schemaEditor;
+        
+        // install Monaco language client services
         this.monacoServices = MonacoServices.install(ovlEditor);
 
         // create the web socket
         const url = this.createUrl('/ovLanguage');
         const webSocket = this.createWebSocket(url);
 
-        // install Monaco language client services
 
         // listen when the web socket is opened
         listen({
@@ -76,8 +77,10 @@ export class LspClient {
         return new MonacoLanguageClient({
             name: "openVALIDATION Language Client",
             clientOptions: {
+
                 // use a language id as a document selector
                 documentSelector: ['ov'],
+
                 // disable the default error handler
                 errorHandler: {
                     error: () => ErrorAction.Continue,
@@ -89,10 +92,15 @@ export class LspClient {
                 get: async (errorHandler, closeHandler) => {
                     this.currentConnection = await createConnection(connection, errorHandler, closeHandler);
 
+                    // Informs the server about the initialized schema
+                    this.currentConnection.sendNotification("textDocument/schemaChanged", this.schemaEditor.getValue());
+
+                    // Handler for semantic-highlighting
                     this.currentConnection.onNotification("textDocument/semanticHighlighting", (params) => {
                         this.tokenizer.setTokenization(params);
                     });
 
+                    // Handler for newly generated code
                     this.currentConnection.onNotification("textDocument/generatedCode", (param) => {
                         var paramJson = JSON.parse(param);
                         var language = paramJson.language.toLowerCase();
@@ -105,9 +113,9 @@ export class LspClient {
                         }
                     });
 
+                    // Handler for changing of the schema
                     this.monacoServices.workspace.onDidChangeTextDocument((event) => {
                         if (event.textDocument.languageId == "yaml") {
-                            console.log(this.schemaEditor.getValue())
                             this.currentConnection.sendNotification("textDocument/schemaChanged", this.schemaEditor.getValue());
                         }
 
