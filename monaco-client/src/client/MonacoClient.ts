@@ -49,7 +49,8 @@ KOMMENTAR Dies ist ein Kommentar
             glyphMargin: true,
             lightbulb: {
                 enabled: true
-            }
+            },
+            fixedOverflowWidgets: true
         });
 
         return editor;
@@ -72,7 +73,8 @@ KOMMENTAR Dies ist ein Kommentar
             glyphMargin: true,
             lightbulb: {
                 enabled: true
-            }
+            },
+            fixedOverflowWidgets: true
         });
 
         return editor;
@@ -97,7 +99,8 @@ Berufserfahrung: 5`;
             glyphMargin: true,
             lightbulb: {
                 enabled: true
-            }
+            },
+            fixedOverflowWidgets: true
         });
 
         return editor;
