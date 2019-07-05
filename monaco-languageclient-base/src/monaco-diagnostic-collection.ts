@@ -93,7 +93,6 @@ export class MonacoModelDiagnostics implements Disposable {
             monaco.editor.setModelMarkers(model, this.owner, this._markers);
 
             if (this.diagnostics.length != 0) {
-                //TODO: Delete old decorations
                 this.decorations = this.diagnostics.map(e => {
                     return {
                         range: new monaco.Range(

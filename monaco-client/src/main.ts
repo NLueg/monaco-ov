@@ -26,5 +26,4 @@ async function createEditors() {
     var schemaEditor = await MonacoClientCreator.createSchemaEditor();
     var outputEditor = await MonacoClientCreator.createOutputEditor();
     LspClient.createLspClient(ovlEditor, schemaEditor, outputEditor);
-
 }

@@ -36,7 +36,7 @@ export class LspClient {
         // this.ovlEditor = ovlEditor;
         this.outputEditor = outputEditor;
         this.schemaEditor = schemaEditor;
-        
+
         // install Monaco language client services
         this.monacoServices = MonacoServices.install(ovlEditor);
 
@@ -122,10 +122,44 @@ export class LspClient {
                         //TODO: Trigger text-edit for ov-model
                     });
 
+                    this.setClickHandler();
+
                     return Promise.resolve(this.currentConnection);
                 }
             }
         });
+    }
+
+
+    /**
+     * Sets the click handler to the select-elements for the langauge and culture
+     *
+     * @private
+     * @static
+     * @memberof LspClient
+     */
+    private static setClickHandler() {
+        var cultureSelectBox = document.getElementById("culture") as HTMLSelectElement;
+
+        if (cultureSelectBox != null) {
+            cultureSelectBox.onchange = (e: Event) => {
+                if (e != null) {
+                    var selectedCulture = cultureSelectBox.options[cultureSelectBox.selectedIndex].value;
+                    this.currentConnection.sendNotification("textDocument/cultureChanged", selectedCulture);
+                }
+            }
+        }
+
+        var languageSelectBox = document.getElementById("language") as HTMLSelectElement;
+
+        if (languageSelectBox != null) {
+            languageSelectBox.onchange = (e: Event) => {
+                if (e != null) {
+                    var selectedLanguage = languageSelectBox.options[languageSelectBox.selectedIndex].value;
+                    this.currentConnection.sendNotification("textDocument/languageChanged", selectedLanguage);
+                }
+            }
+        }
     }
 
 

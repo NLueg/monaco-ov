@@ -22,7 +22,6 @@ body {
     right: 5%;
     top: 100px;
     bottom: 50px;
-    overflow: hidden;
 }
 
 #monaco-editor,
@@ -82,4 +81,31 @@ body {
     background-image: url('../images/errorIcon.png');
     background-size: contain;
     background-repeat: no-repeat;
+}
+
+.tabArea {
+    position: absolute;
+    height: 20px;
+    top: -20px;
+    width: 49.6%;
+}
+
+.tabAreaLeft {
+    left: 0px;
+}
+
+.tabAreaRight {
+    right: 0px;
+}
+
+#culture {
+    float: right;
+}
+
+#language {
+    float: left;
+}
+
+.selectBox {
+    background-color: grey;
 }
