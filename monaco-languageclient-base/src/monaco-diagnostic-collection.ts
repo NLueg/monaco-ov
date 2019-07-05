@@ -49,7 +49,8 @@ export class MonacoModelDiagnostics implements Disposable {
     readonly uri: monaco.Uri;
     protected _markers: IMarkerData[] = [];
     protected _diagnostics: Diagnostic[] = [];
-    protected _decorations: IModelDeltaDecoration[] = [];
+    protected decorations: IModelDeltaDecoration[] = [];
+    private deltaDecorations: string[];
 
     constructor(
         uri: string,
@@ -59,6 +60,7 @@ export class MonacoModelDiagnostics implements Disposable {
     ) {
         this.uri = monaco.Uri.parse(uri);
         this.diagnostics = diagnostics;
+        this.deltaDecorations = [];
         monaco.editor.onDidCreateModel(model => this.doUpdateModelMarkers(model));
     }
 
@@ -90,21 +92,26 @@ export class MonacoModelDiagnostics implements Disposable {
         if (model && this.uri.toString() === model.uri.toString()) {
             monaco.editor.setModelMarkers(model, this.owner, this._markers);
 
-            //TODO: Delete old decorations
-            this._decorations = this.diagnostics.map(e => {
-                return {
-                    range: new monaco.Range(
-                        (e.range.start.line + 1),
-                        (e.range.start.character),
-                        (e.range.end.line + 1),
-                        (e.range.start.character)),
-                    options: {
-                        glyphMarginClassName: e.severity === DiagnosticSeverity.Error ? 'errorIcon' : 'warningIcon',
-                        glyphMarginHoverMessage: { value: e.message }
+            if (this.diagnostics.length != 0) {
+                //TODO: Delete old decorations
+                this.decorations = this.diagnostics.map(e => {
+                    return {
+                        range: new monaco.Range(
+                            (e.range.start.line + 1),
+                            (e.range.start.character),
+                            (e.range.end.line + 1),
+                            (e.range.start.character)),
+                        options: {
+                            glyphMarginClassName: e.severity === DiagnosticSeverity.Error ? 'errorIcon' : 'warningIcon',
+                            glyphMarginHoverMessage: { value: e.message }
+                        }
                     }
-                }
-            });
-            model.deltaDecorations([], this._decorations);
+                });
+                
+                this.deltaDecorations = model.deltaDecorations([], this.decorations);
+            } else {
+                this.deltaDecorations = model.deltaDecorations(this.deltaDecorations, []);
+            }
         }
     }
 }
