@@ -24,24 +24,28 @@ DANN Sie müssen mindestens 18 Jahre alt sein und über eine Berufserfahrung
         von minimum 5 Jahren verfügen
 
 KOMMENTAR Dies ist ein Kommentar
-            Und hier auch...
+            Und hier auch... KOMMENTAR ENDE
 
-            `;
-//     SUMME VON Einkaufsliste.Preis
-// ALS Ausgaben
+    SUMME VON Einkaufsliste.Preis
+ALS Ausgaben
 
-// das Alter des Bewerbers MUSS MINDESTENS 18 sein
+das Alter des Bewerbers MUSS MINDESTENS 18 sein
+
+    ( 20 - 18 ) * 12
+ALS Berufserfahrung in Monaten
+
+
+`;
+
+// Der Bewerber DARF NICHT JÜNGER als 18 sein
+
+// OPERAND  Alter
+// OPERATOR  KLEINER
+//         ALS  JÜNGER
 
 //     ( 20 - 18 ) * 12
 // ALS Berufserfahrung in Monaten
 
-//     OPERAND  Alter
-// OPERATOR  KLEINER
-//         ALS  JÜNGER
-
-// die Ausgaben DÜRFEN NICHT das Budget von 20 € ÜBERSTEIGEN
-
-// Der Bewerber DARF NICHT JÜNGER als 18 sein 
         var editor = monaco.editor.create(document.getElementById("monaco-editor")!, {
             model: monaco.editor.createModel(initialValue, 'ov', monaco.Uri.parse('inmemory://model.ov')),
             theme: 'vs-dark',
@@ -91,7 +95,9 @@ KOMMENTAR Dies ist ein Kommentar
         var valueSchema = `Name: Satoshi 
 Alter: 25 
 Wohnort: Dortmund
-Berufserfahrung: 5`;
+Berufserfahrung: 5
+Einkaufsliste: 
+    Preis: 10`;
         var editor = monaco.editor.create(document.getElementById("schema-definition")!, {
             model: monaco.editor.createModel(valueSchema, 'yaml', monaco.Uri.parse('inmemory://schemaDefinition.yaml')),
             theme: 'vs-dark',
