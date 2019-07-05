@@ -10,7 +10,7 @@ const ReconnectingWebSocket = require('reconnecting-websocket');
 
 export class LspClient {
     private static tokenizer = new TextMateTokenizer();
-    // private static ovlEditor: monaco.editor.IStandaloneCodeEditor;
+    private static ovEditor: monaco.editor.IStandaloneCodeEditor;
     private static outputEditor: monaco.editor.IStandaloneCodeEditor;
     private static schemaEditor: monaco.editor.IStandaloneCodeEditor;
     private static monacoServices: MonacoServices;
@@ -33,7 +33,7 @@ export class LspClient {
         schemaEditor: monaco.editor.IStandaloneCodeEditor,
         outputEditor: monaco.editor.IStandaloneCodeEditor
     ) {
-        // this.ovlEditor = ovlEditor;
+        this.ovEditor = ovlEditor;
         this.outputEditor = outputEditor;
         this.schemaEditor = schemaEditor;
 
@@ -93,7 +93,7 @@ export class LspClient {
                     this.currentConnection = await createConnection(connection, errorHandler, closeHandler);
 
                     // Informs the server about the initialized schema
-                    this.currentConnection.sendNotification("textDocument/schemaChanged", this.schemaEditor.getValue());
+                    this.sendSchemaChangedNotification();
 
                     // Handler for semantic-highlighting
                     this.currentConnection.onNotification("textDocument/semanticHighlighting", (params) => {
@@ -116,7 +116,7 @@ export class LspClient {
                     // Handler for changing of the schema
                     this.monacoServices.workspace.onDidChangeTextDocument((event) => {
                         if (event.textDocument.languageId == "yaml") {
-                            this.currentConnection.sendNotification("textDocument/schemaChanged", this.schemaEditor.getValue());
+                            this.sendSchemaChangedNotification();
                         }
 
                         //TODO: Trigger text-edit for ov-model
@@ -128,6 +128,12 @@ export class LspClient {
                 }
             }
         });
+    }
+
+    private static sendSchemaChangedNotification() {
+        var schemaValue = this.schemaEditor.getValue();
+        var textdocumentUri = this.ovEditor.getModel()!.uri.toString();
+        this.currentConnection.sendNotification("textDocument/schemaChanged", { schema: schemaValue, uri: textdocumentUri });
     }
 
 
@@ -145,7 +151,8 @@ export class LspClient {
             cultureSelectBox.onchange = (e: Event) => {
                 if (e != null) {
                     var selectedCulture = cultureSelectBox.options[cultureSelectBox.selectedIndex].value;
-                    this.currentConnection.sendNotification("textDocument/cultureChanged", selectedCulture);
+                    var textdocumentUri = this.ovEditor.getModel()!.uri.toString();
+                    this.currentConnection.sendNotification("textDocument/cultureChanged", { culture: selectedCulture, uri: textdocumentUri });
                 }
             }
         }
@@ -156,7 +163,8 @@ export class LspClient {
             languageSelectBox.onchange = (e: Event) => {
                 if (e != null) {
                     var selectedLanguage = languageSelectBox.options[languageSelectBox.selectedIndex].value;
-                    this.currentConnection.sendNotification("textDocument/languageChanged", selectedLanguage);
+                    var textdocumentUri = this.ovEditor.getModel()!.uri.toString();
+                    this.currentConnection.sendNotification("textDocument/languageChanged", { language: selectedLanguage, uri: textdocumentUri });
                 }
             }
         }
