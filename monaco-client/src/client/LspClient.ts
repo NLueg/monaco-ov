@@ -95,33 +95,9 @@ export class LspClient {
                     // Informs the server about the initialized schema
                     this.sendSchemaChangedNotification();
 
-                    // Handler for semantic-highlighting
-                    this.currentConnection.onNotification("textDocument/semanticHighlighting", (params) => {
-                        this.tokenizer.setTokenization(params);
-                    });
-
-                    // Handler for newly generated code
-                    this.currentConnection.onNotification("textDocument/generatedCode", (param) => {
-                        var paramJson = JSON.parse(param);
-                        var language = paramJson.language.toLowerCase();
-                        var value = paramJson.value;
-
-                        var currentModel = this.outputEditor.getModel()
-                        if (currentModel) {
-                            currentModel.setValue(value);
-                            monaco.editor.setModelLanguage(currentModel, language);
-                        }
-                    });
-
-                    // Handler for changing of the schema
-                    this.monacoServices.workspace.onDidChangeTextDocument((event) => {
-                        if (event.textDocument.languageId == "yaml") {
-                            this.sendSchemaChangedNotification();
-                        }
-
-                        //TODO: Trigger text-edit for ov-model
-                    });
-
+                    this.addSemanticHighlightingNotificationListener();
+                    this.addGeneratedCodeNotificationListener();
+                    this.addDidChangeTextDocumentListener();
                     this.setClickHandler();
 
                     return Promise.resolve(this.currentConnection);
@@ -130,12 +106,75 @@ export class LspClient {
         });
     }
 
+    /**
+     * Adds listener to the notification "textDocument/semanticHighlighting" to set a new  
+     * tokenizer for syntax-highlighting
+     *
+     * @private
+     * @static
+     * @memberof LspClient
+     */
+    private static addSemanticHighlightingNotificationListener() {
+        // Handler for semantic-highlighting
+        this.currentConnection.onNotification("textDocument/semanticHighlighting", (params) => {
+            this.tokenizer.setTokenization(params);
+        });
+    }
+
+    /**
+     * Adds listener to the notification "textDocument/generatedCode" to reload the code 
+     * of the code-editor
+     *
+     * @private
+     * @static
+     * @memberof LspClient
+     */
+    private static addGeneratedCodeNotificationListener() {
+        // Handler for newly generated code
+        this.currentConnection.onNotification("textDocument/generatedCode", (param) => {
+            var paramJson = JSON.parse(param);
+            var language = paramJson.language.toLowerCase();
+            var value = paramJson.value;
+
+            var currentModel = this.outputEditor.getModel()
+            if (currentModel) {
+                currentModel.setValue(value);
+                monaco.editor.setModelLanguage(currentModel, language);
+            }
+        });
+    }
+
+
+    /**
+     * Adds listener to "onDidChangeTextDocument"-Method to inform the server about 
+     * the changed schema
+     *
+     * @private
+     * @static
+     * @memberof LspClient
+     */
+    private static addDidChangeTextDocumentListener() {
+        // Handler for changing of the schema
+        this.monacoServices.workspace.onDidChangeTextDocument((event) => {
+            if (event.textDocument.languageId == "yaml") {
+                this.sendSchemaChangedNotification();
+            }
+        });
+    }
+
+
+    /**
+     * Sends the client the current schema and the uri of the active document
+     *
+     * @private
+     * @static
+     * @memberof LspClient
+     */
     private static sendSchemaChangedNotification() {
         var schemaValue = this.schemaEditor.getValue();
         var textdocumentUri = this.ovEditor.getModel()!.uri.toString();
         this.currentConnection.sendNotification("textDocument/schemaChanged", { schema: schemaValue, uri: textdocumentUri });
     }
-
 
     /**
      * Sets the click handler to the select-elements for the langauge and culture
@@ -170,7 +209,6 @@ export class LspClient {
         }
     }
 
-
     /**
      * Creates the URL to the websocket we want to connect to
      *
@@ -184,7 +222,6 @@ export class LspClient {
         const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
         return normalizeUrl(`${protocol}://localhost:3000${location.pathname}${path}`);
     }
-
 
     /**
      * Generates a websocket to the language-server
