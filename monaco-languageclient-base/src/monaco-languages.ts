@@ -221,7 +221,7 @@ export class MonacoLanguages implements Languages {
     }
 
     registerDocumentSymbolProvider(selector: DocumentSelector, provider: DocumentSymbolProvider): Disposable {
-        const  = this.createDocumentSymbolProvider(selector, provider);
+        const documentSymbolProvider = this.createDocumentSymbolProvider(selector, provider);
         const providers = new DisposableCollection();
         for (const language of getLanguages()) {
             if (this.matchLanguage(selector, language)) {

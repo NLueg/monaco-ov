@@ -107,7 +107,7 @@ export class MonacoModelDiagnostics implements Disposable {
                     }
                 });
                 
-                this.deltaDecorations = model.deltaDecorations([], this.decorations);
+                this.deltaDecorations = model.deltaDecorations(this.deltaDecorations, this.decorations);
             } else {
                 this.deltaDecorations = model.deltaDecorations(this.deltaDecorations, []);
             }
