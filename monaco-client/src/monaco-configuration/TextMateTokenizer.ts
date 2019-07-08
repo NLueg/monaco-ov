@@ -2,7 +2,6 @@ import { loadWASM } from 'onigasm' // peer dependency of 'monaco-textmate'
 import { Registry } from 'monaco-textmate' // peer dependency
 import { wireTmGrammars } from 'monaco-editor-textmate';
 
-
 /**
  * Class for setting Monaco-Tokenizer based on a TextMate grammar
  *

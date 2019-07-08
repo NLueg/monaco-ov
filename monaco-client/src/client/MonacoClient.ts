@@ -24,7 +24,7 @@ DANN Sie müssen mindestens 18 Jahre alt sein und über eine Berufserfahrung
         von minimum 5 Jahren verfügen
 
 KOMMENTAR Dies ist ein Kommentar
-            Und hier auch... KOMMENTAR ENDE
+            Und hier auch...
 
     SUMME VON Einkaufsliste.Preis
 ALS Ausgaben
