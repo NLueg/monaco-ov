@@ -12,7 +12,7 @@ export class MonacoClientCreator {
 DANN Sie müssen mindestens 18 Jahre alt sein
 
     das Alter des Bewerbers ist KLEINER 18
-ALS  Minderjährig
+ALS Minderjährig
 
 WENN der Bewerber Minderjährig ist
     UND sein Wohnort ist NICHT Dortmund
@@ -23,7 +23,7 @@ WENN der Bewerber Minderjährig ist
 DANN Sie müssen mindestens 18 Jahre alt sein und über eine Berufserfahrung
         von minimum 5 Jahren verfügen
 
-KOMMENTAR Dies ist ein Kommentar
+KOMMENTAR Dies ist ein KommentarKommentarKommentarKommentarKommentarKommentarKommentarKommentarKommeddd
             Und hier auch...
 
     SUMME VON Einkaufsliste.Preis
@@ -37,14 +37,10 @@ ALS Berufserfahrung in Monaten
 
 `;
 
-// Der Bewerber DARF NICHT JÜNGER als 18 sein
+        // Der Bewerber DARF NICHT JÜNGER als 18 sein
 
-// OPERAND  Alter
-// OPERATOR  KLEINER
-//         ALS  JÜNGER
-
-//     ( 20 - 18 ) * 12
-// ALS Berufserfahrung in Monaten
+        //     ( 20 - 18 ) * 12
+        // ALS Berufserfahrung in Monaten
 
         var editor = monaco.editor.create(document.getElementById("monaco-editor")!, {
             model: monaco.editor.createModel(initialValue, 'ov', monaco.Uri.parse('inmemory://model.ov')),

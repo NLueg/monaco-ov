@@ -98,6 +98,7 @@ export class LspClient {
                     this.addSemanticHighlightingNotificationListener();
                     this.addGeneratedCodeNotificationListener();
                     this.addDidChangeTextDocumentListener();
+                    this.addAliasesChangesListener();
                     this.setClickHandler();
 
                     return Promise.resolve(this.currentConnection);
@@ -144,7 +145,6 @@ export class LspClient {
         });
     }
 
-
     /**
      * Adds listener to "onDidChangeTextDocument"-Method to inform the server about 
      * the changed schema
@@ -161,7 +161,26 @@ export class LspClient {
             }
         });
     }
-
+    
+    /**
+     * Adds listener to the notification "textDocument/aliasesChanges" to set a few
+     * language-configurations for the ov-language
+     *
+     * @private
+     * @static
+     * @memberof LspClient
+     */
+    private static addAliasesChangesListener() {
+        // Handler for semantic-highlighting
+        this.currentConnection.onNotification("textDocument/aliasesChanges", (params : string) => {
+            console.log(params);
+            monaco.languages.setLanguageConfiguration('ov', {
+                comments: {
+                    lineComment: params as string
+                }
+            });
+        });
+    }
 
     /**
      * Sends the client the current schema and the uri of the active document
