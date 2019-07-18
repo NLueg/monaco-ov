@@ -173,7 +173,6 @@ export class LspClient {
     private static addAliasesChangesListener() {
         // Handler for semantic-highlighting
         this.currentConnection.onNotification("textDocument/aliasesChanges", (params : string) => {
-            console.log(params);
             monaco.languages.setLanguageConfiguration('ov', {
                 comments: {
                     lineComment: params as string

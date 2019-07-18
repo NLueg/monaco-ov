@@ -109,7 +109,9 @@ export class MonacoModelDiagnostics implements Disposable {
                 
                 this.deltaDecorations = model.deltaDecorations(this.deltaDecorations, this.decorations);
             } else {
-                this.deltaDecorations = model.deltaDecorations(this.deltaDecorations, []);
+                //Dirty hack, because an empty list dont worked (see https://github.com/Microsoft/monaco-editor/issues/269)
+                var dummyDecoration = [{ range: new monaco.Range(1,1,1,1), options : { } }];
+                this.deltaDecorations = model.deltaDecorations(this.deltaDecorations, dummyDecoration);
             }
         }
     }

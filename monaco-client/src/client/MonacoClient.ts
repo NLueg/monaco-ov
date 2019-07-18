@@ -19,7 +19,7 @@ WENN der Bewerber Minderjährig ist
 DANN Sie müssen mindestens 18 Jahre alt sein und aus Dortmund kommen
 
 WENN der Bewerber Minderjährig ist
-    ODER seine Berufserfahrung ist KÜRZER als 5 Jahre
+    ODER seine Berufserfahrung ist KÜRZER als 5 Jahre 
 DANN Sie müssen mindestens 18 Jahre alt sein und über eine Berufserfahrung
         von minimum 5 Jahren verfügen
 
