@@ -8,31 +8,31 @@ export class MonacoClientCreator {
      * @memberof MonacoClient
      */
     public static async createOvlEditor(): Promise<monaco.editor.IStandaloneCodeEditor> {
-        var initialValue = `WENN das Alter des Bewerbers KLEINER 18 ist
-DANN Sie müssen mindestens 18 Jahre alt sein
+        var initialValue = `Wenn das Alter des Bewerbers kleiner 18 ist
+Dann Sie müssen mindestens 18 Jahre alt sein
 
-    das Alter des Bewerbers ist KLEINER 18
-ALS Minderjährig
+    das Alter des Bewerbers ist kleiner 18
+Als Minderjährig
 
-WENN der Bewerber Minderjährig ist
-    UND sein Wohnort ist NICHT Dortmund
-DANN Sie müssen mindestens 18 Jahre alt sein und aus Dortmund kommen
+Wenn der Bewerber Minderjährig ist
+    und sein Wohnort ist nicht Dortmund
+Dann Sie müssen mindestens 18 Jahre alt sein und aus Dortmund kommen
 
-WENN der Bewerber Minderjährig ist
-    ODER seine Berufserfahrung ist KÜRZER als 5 Jahre 
-DANN Sie müssen mindestens 18 Jahre alt sein und über eine Berufserfahrung
+Wenn der Bewerber Minderjährig ist
+    oder seine Berufserfahrung ist kürzer als 5 Jahre 
+Dann Sie müssen mindestens 18 Jahre alt sein und über eine Berufserfahrung
         von minimum 5 Jahren verfügen
 
-KOMMENTAR Dies ist ein KommentarKommentarKommentarKommentarKommentarKommentarKommentarKommentarKommeddd
+Kommentar Dies ist ein Kommentar
             Und hier auch...
 
-    SUMME VON Einkaufsliste.Preis
-ALS Ausgaben
+    Summe von Einkaufsliste.Preis
+Als Ausgaben
 
-das Alter des Bewerbers MUSS MINDESTENS 18 sein
+das Alter des Bewerbers muss mindestens 18 sein
 
     ( 20 - 18 ) * 12
-ALS Berufserfahrung in Monaten
+Als Berufserfahrung in Monaten
 
 
 `;
@@ -50,7 +50,8 @@ ALS Berufserfahrung in Monaten
             lightbulb: {
                 enabled: true
             },
-            fixedOverflowWidgets: true
+            fixedOverflowWidgets: true,
+            wordBasedSuggestions: false
         });
 
         return editor;
@@ -74,7 +75,8 @@ ALS Berufserfahrung in Monaten
             lightbulb: {
                 enabled: true
             },
-            fixedOverflowWidgets: true
+            fixedOverflowWidgets: true,
+            wordBasedSuggestions: false
         });
 
         return editor;
@@ -102,7 +104,8 @@ Einkaufsliste:
             lightbulb: {
                 enabled: true
             },
-            fixedOverflowWidgets: true
+            fixedOverflowWidgets: true,
+            wordBasedSuggestions: false
         });
 
         return editor;

@@ -54,7 +54,6 @@ export class LspClient {
                 const languageClient = this.createLanguageClient(connection);
                 const disposable = languageClient.start();
 
-                connection.onDispose(() => disposable.dispose());
                 connection.onClose(() => disposable.dispose());
 
                 await languageClient.onReady;
