@@ -1,4 +1,4 @@
-import { listen, MessageConnection } from '@sourcegraph/vscode-ws-jsonrpc';
+import { listen, MessageConnection } from 'vscode-ws-jsonrpc';
 import {
     MonacoLanguageClient, CloseAction, ErrorAction,
     MonacoServices, createConnection, IConnection
