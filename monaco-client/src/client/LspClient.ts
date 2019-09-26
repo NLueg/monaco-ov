@@ -5,6 +5,8 @@ import {
 } from 'monaco-languageclient';
 import normalizeUrl = require('normalize-url');
 import { TextMateTokenizer } from '../monaco-configuration/TextMateTokenizer';
+// import { SemanticHighlightingService } from '../highlighting/semantic-highlighting-service';
+// import { BaseLanguageClient } from 'vscode-languageclient';
 
 const ReconnectingWebSocket = require('reconnecting-websocket');
 
@@ -40,6 +42,7 @@ export class LspClient {
         // install Monaco language client services
         this.monacoServices = MonacoServices.install(ovlEditor);
 
+
         // create the web socket
         const url = this.createUrl('/ovLanguage');
         const webSocket = this.createWebSocket(url);
@@ -73,7 +76,7 @@ export class LspClient {
      * @memberof LspClient
      */
     private static createLanguageClient(connection: MessageConnection): MonacoLanguageClient {
-        return new MonacoLanguageClient({
+        var client = new MonacoLanguageClient({
             name: "openVALIDATION Language Client",
             clientOptions: {
 
@@ -93,6 +96,7 @@ export class LspClient {
 
                     // Informs the server about the initialized schema
                     this.sendSchemaChangedNotification();
+                    this.sendLanguageConfiguration();
 
                     this.addSemanticHighlightingNotificationListener();
                     this.addGeneratedCodeNotificationListener();
@@ -104,6 +108,10 @@ export class LspClient {
                 }
             }
         });
+
+        // client.registerFeature(SemanticHighlightingService.createNewFeature(new SemanticHighlightingService(), client as unknown as BaseLanguageClient, "ov"));
+
+        return client;
     }
 
     /**
@@ -160,7 +168,7 @@ export class LspClient {
             }
         });
     }
-    
+
     /**
      * Adds listener to the notification "textDocument/aliasesChanges" to set a few
      * language-configurations for the ov-language
@@ -171,7 +179,7 @@ export class LspClient {
      */
     private static addAliasesChangesListener() {
         // Handler for semantic-highlighting
-        this.currentConnection.onNotification("textDocument/aliasesChanges", (params : string) => {
+        this.currentConnection.onNotification("textDocument/aliasesChanges", (params: string) => {
             monaco.languages.setLanguageConfiguration('ov', {
                 comments: {
                     lineComment: params as string
@@ -192,6 +200,32 @@ export class LspClient {
         var textdocumentUri = this.ovEditor.getModel()!.uri.toString();
         this.currentConnection.sendNotification("textDocument/schemaChanged", { schema: schemaValue, uri: textdocumentUri });
     }
+
+    /**
+     * Sends the client the culture and language to the server
+     *
+     * @private
+     * @static
+     * @memberof LspClient
+     */
+    private static sendLanguageConfiguration() {
+        var cultureSelectBox = document.getElementById("culture") as HTMLSelectElement;
+
+        if (cultureSelectBox != null) {
+            var selectedCulture = cultureSelectBox.options[cultureSelectBox.selectedIndex].value;
+            var textdocumentUri = this.ovEditor.getModel()!.uri.toString();
+            this.currentConnection.sendNotification("textDocument/cultureChanged", { culture: selectedCulture, uri: textdocumentUri });
+        }
+
+        var languageSelectBox = document.getElementById("language") as HTMLSelectElement;
+
+        if (languageSelectBox != null) {
+            var selectedLanguage = languageSelectBox.options[languageSelectBox.selectedIndex].value;
+            var textdocumentUri = this.ovEditor.getModel()!.uri.toString();
+            this.currentConnection.sendNotification("textDocument/languageChanged", { language: selectedLanguage, uri: textdocumentUri });
+        }
+    }
+
 
     /**
      * Sets the click handler to the select-elements for the langauge and culture
