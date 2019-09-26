@@ -92,7 +92,7 @@ export class LspClient {
             // create a language client connection from the JSON RPC connection on demand
             connectionProvider: {
                 get: async (errorHandler, closeHandler) => {
-                    this.currentConnection = await createConnection(connection, errorHandler, closeHandler);
+                    this.currentConnection = createConnection(connection, errorHandler, closeHandler);
 
                     // Informs the server about the initialized schema
                     this.sendSchemaChangedNotification();
