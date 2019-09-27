@@ -125,7 +125,7 @@ export class LspClient {
     private static addSemanticHighlightingNotificationListener() {
         // Handler for semantic-highlighting
         this.currentConnection.onNotification("textDocument/semanticHighlighting", (params) => {
-            this.tokenizer.setTokenization(params);
+            this.tokenizer.setTokenization(JSON.parse(params));
         });
     }
 

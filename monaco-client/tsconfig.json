@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "experimentalDecorators": true,
         "target": "es5",
         "module": "commonjs",
         "moduleResolution": "node",
@@ -9,6 +10,7 @@
         "declaration": true,
         "stripInternal": true,
         "lib": [
+            "es6",
             "es2016",
             "dom"
         ],
