@@ -5,6 +5,7 @@ import {
 } from 'monaco-languageclient';
 import normalizeUrl = require('normalize-url');
 import { TextMateTokenizer } from '../monaco-configuration/TextMateTokenizer';
+// import { SemanticHighlightingService } from 'src/highlighting/semantic-highlighting-service';
 // import { SemanticHighlightingService } from '../highlighting/semantic-highlighting-service';
 // import { BaseLanguageClient } from 'vscode-languageclient';
 
@@ -109,7 +110,7 @@ export class LspClient {
             }
         });
 
-        // client.registerFeature(SemanticHighlightingService.createNewFeature(new SemanticHighlightingService(), client as unknown as BaseLanguageClient, "ov"));
+        // client.registerFeature(SemanticHighlightingService.createNewFeature(new SemanticHighlightingService(), client, "ov"));
 
         return client;
     }

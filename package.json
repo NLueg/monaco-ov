@@ -19,6 +19,5 @@
     "url": "https://github.com/NLueg/monaco-languageclient/issues"
   },
   "homepage": "https://github.com/NLueg/monaco-languageclient#readme",
-  "dependencies": {
-  }
+  "dependencies": {}
 }
