@@ -1,12 +1,7 @@
+import { CloseAction, createConnection, ErrorAction, IConnection, MonacoLanguageClient, MonacoServices } from 'monaco-languageclient';
+import * as normalizeUrl from 'normalize-url';
 import { listen, MessageConnection } from 'vscode-ws-jsonrpc';
-import {
-    MonacoLanguageClient, CloseAction, ErrorAction,
-    MonacoServices, createConnection, IConnection
-} from 'monaco-languageclient';
-import normalizeUrl = require('normalize-url');
 import { TextMateTokenizer } from '../monaco-configuration/TextMateTokenizer';
-// import { SemanticHighlightingService } from '../highlighting/semantic-highlighting-service';
-// import { BaseLanguageClient } from 'vscode-languageclient';
 
 const ReconnectingWebSocket = require('reconnecting-websocket');
 
@@ -124,7 +119,7 @@ export class LspClient {
      */
     private static addSemanticHighlightingNotificationListener() {
         // Handler for semantic-highlighting
-        this.currentConnection.onNotification("textDocument/semanticHighlighting", (params) => {
+        this.currentConnection.onNotification("textDocument/semanticHighlighting", (params: any) => {
             this.tokenizer.setTokenization(params);
         });
     }
@@ -139,8 +134,8 @@ export class LspClient {
      */
     private static addGeneratedCodeNotificationListener() {
         // Handler for newly generated code
-        this.currentConnection.onNotification("textDocument/generatedCode", (param) => {
-            var paramJson = JSON.parse(param);
+        this.currentConnection.onNotification("textDocument/generatedCode", (params: any) => {
+            var paramJson = JSON.parse(params);
             var language = paramJson.language.toLowerCase();
             var value = paramJson.value;
 
@@ -162,7 +157,7 @@ export class LspClient {
      */
     private static addDidChangeTextDocumentListener() {
         // Handler for changing of the schema
-        this.monacoServices.workspace.onDidChangeTextDocument((event) => {
+        this.monacoServices.workspace.onDidChangeTextDocument((event: any) => {
             if (event.textDocument.languageId == "yaml") {
                 this.sendSchemaChangedNotification();
             }
