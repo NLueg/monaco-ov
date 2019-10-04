@@ -65,7 +65,8 @@ if (process.env['NODE_ENV'] === 'production') {
             new webpack.DefinePlugin({
                 'process.env.NODE_ENV': JSON.stringify('production')
             })
-        ]
+        ],
+        mode: 'production'
     });
 } else {
     module.exports = merge(common, {
@@ -76,6 +77,7 @@ if (process.env['NODE_ENV'] === 'production') {
                 enforce: 'pre',
                 loader: 'source-map-loader'
             }]
-        }
+        },        
+        mode: 'development'
     })
 } 
