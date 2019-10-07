@@ -104,8 +104,6 @@ export class LspClient {
             }
         });
 
-        // client.registerFeature(SemanticHighlightingService.createNewFeature(new SemanticHighlightingService(), client as unknown as BaseLanguageClient, "ov"));
-
         return client;
     }
 

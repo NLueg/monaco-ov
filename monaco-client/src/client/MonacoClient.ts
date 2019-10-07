@@ -44,7 +44,7 @@ Als Berufserfahrung in Monaten
 
         var editor = monaco.editor.create(document.getElementById("monaco-editor")!, {
             model: monaco.editor.createModel(initialValue, 'ov', monaco.Uri.parse('inmemory://model.ov')),
-            theme: 'vs-dark',
+            theme: 'vs',
             automaticLayout: true,
             glyphMargin: true,
             lightbulb: {
@@ -68,7 +68,7 @@ Als Berufserfahrung in Monaten
     public static async createOutputEditor(): Promise<monaco.editor.IStandaloneCodeEditor> {
         var editor = monaco.editor.create(document.getElementById("generated-code")!, {
             model: monaco.editor.createModel("", 'java', monaco.Uri.parse('inmemory://model.java')),
-            theme: 'vs-dark',
+            theme: 'vs',
             readOnly: true,
             automaticLayout: true,
             glyphMargin: true,
@@ -98,7 +98,7 @@ Einkaufsliste:
     Preis: 10`;
         var editor = monaco.editor.create(document.getElementById("schema-definition")!, {
             model: monaco.editor.createModel(valueSchema, 'yaml', monaco.Uri.parse('inmemory://schemaDefinition.yaml')),
-            theme: 'vs-dark',
+            theme: 'vs',
             automaticLayout: true,
             glyphMargin: true,
             lightbulb: {
