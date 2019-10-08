@@ -1,4 +1,4 @@
-import { CloseAction, createConnection, ErrorAction, IConnection, MonacoLanguageClient, MonacoServices, OutputChannel } from 'monaco-languageclient';
+import { CloseAction, createConnection, ErrorAction, IConnection, MonacoLanguageClient, MonacoServices, Trace, OutputChannel } from 'monaco-languageclient';
 import { listen, MessageConnection } from 'vscode-ws-jsonrpc';
 import { ContentEnum, ContentManager } from '../ContentManager';
 import { TextMateTokenizer } from '../monaco-configuration/TextMateTokenizer';
@@ -51,6 +51,10 @@ export class LspClient {
                 const disposable = languageClient.start();
                 connection.onClose(() => disposable.dispose());
 
+                languageClient.trace = Trace.Verbose;
+                // languageClient.tra = fooChannel
+
+
                 await languageClient.onReady;
             }
         });
@@ -71,19 +75,18 @@ export class LspClient {
         let output = '';
         const fooChannel: OutputChannel = {
             append(value: string) {
-                console.log(value);
-                output += value;
+                output += value
             },
             appendLine(value: string) {
-                console.log(value);
-                output += value + '\n';
+                output += value + '\n'
+                console.log(output)
             },
             show() {
                 console.log(output)
             },
             dispose() { console.log("Dispose"); }
         }
-        
+
 
         var client = new MonacoLanguageClient({
             name: "openVALIDATION Language Client",
