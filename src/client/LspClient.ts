@@ -1,26 +1,22 @@
-import { CloseAction, createConnection, ErrorAction, IConnection, MonacoLanguageClient, MonacoServices, Trace, OutputChannel } from 'monaco-languageclient';
+import {
+    CloseAction, createConnection, ErrorAction, IConnection, MonacoLanguageClient, MonacoServices, OutputChannel, Trace
+} from 'monaco-languageclient';
+import normalizeUrl = require('normalize-url');
 import { listen, MessageConnection } from 'vscode-ws-jsonrpc';
 import { ContentEnum, ContentManager } from '../ContentManager';
 import { TextMateTokenizer } from '../monaco-configuration/TextMateTokenizer';
-import normalizeUrl = require('normalize-url');
 
 const ReconnectingWebSocket = require('reconnecting-websocket');
 
 export class LspClient {
-    private static tokenizer = new TextMateTokenizer();
-    private static ovEditor: monaco.editor.IStandaloneCodeEditor;
-    private static outputEditor: monaco.editor.IStandaloneCodeEditor;
-    private static schemaEditor: monaco.editor.IStandaloneCodeEditor;
-    private static monacoServices: MonacoServices;
-    private static currentConnection: IConnection;
 
     /**
      * Creates the language-client und connects it to the language-server
      *
      * @static
-     * @param {monaco.editor.IStandaloneCodeEditor} ovlEditor the monaco-editor which 
+     * @param {monaco.editor.IStandaloneCodeEditor} ovlEditor the monaco-editor which
      *          needs to be connected to the language server
-     * @param {monaco.editor.IStandaloneCodeEditor} schemaEditor the editor for the 
+     * @param {monaco.editor.IStandaloneCodeEditor} schemaEditor the editor for the
      *          schema definition in ov
      * @param {monaco.editor.IStandaloneCodeEditor} outputEditor the editor which displays
      *          the generated source-code
@@ -54,17 +50,21 @@ export class LspClient {
                 languageClient.trace = Trace.Verbose;
                 // languageClient.tra = fooChannel
 
-
                 await languageClient.onReady;
             }
         });
     }
-
+    private static tokenizer = new TextMateTokenizer();
+    private static ovEditor: monaco.editor.IStandaloneCodeEditor;
+    private static outputEditor: monaco.editor.IStandaloneCodeEditor;
+    private static schemaEditor: monaco.editor.IStandaloneCodeEditor;
+    private static monacoServices: MonacoServices;
+    private static currentConnection: IConnection;
 
     /**
      * Creates the MonacoLanguageClient which is the language-client
      *  and communicates with the language-server
-     * 
+     *
      * @private
      * @static
      * @param {MessageConnection} connection connection to the language-server
@@ -75,21 +75,20 @@ export class LspClient {
         let output = '';
         const fooChannel: OutputChannel = {
             append(value: string) {
-                output += value
+                output += value;
             },
             appendLine(value: string) {
-                output += value + '\n'
-                console.log(output)
+                output += value + '\n';
+                console.log(output);
             },
             show() {
-                console.log(output)
+                console.log(output);
             },
-            dispose() { console.log("Dispose"); }
-        }
+            dispose() { console.log('Dispose'); }
+        };
 
-
-        var client = new MonacoLanguageClient({
-            name: "openVALIDATION Language Client",
+        const client = new MonacoLanguageClient({
+            name: 'openVALIDATION Language Client',
             clientOptions: {
 
                 // use a language id as a document selector
@@ -127,7 +126,7 @@ export class LspClient {
     }
 
     /**
-     * Adds listener to the notification ``textDocument/semanticHighlighting`` to set a new  
+     * Adds listener to the notification ``textDocument/semanticHighlighting`` to set a new
      * tokenizer for syntax-highlighting
      *
      * @private
@@ -136,13 +135,13 @@ export class LspClient {
      */
     private static addSemanticHighlightingNotificationListener() {
         // Handler for semantic-highlighting
-        this.currentConnection.onNotification("textDocument/semanticHighlighting", (params: any) => {
+        this.currentConnection.onNotification('textDocument/semanticHighlighting', (params: any) => {
             this.tokenizer.setTokenization(params);
         });
     }
 
     /**
-     * Adds listener to the notification ``textDocument/generatedCode`` to reload the code 
+     * Adds listener to the notification ``textDocument/generatedCode`` to reload the code
      * of the code-editor
      *
      * @private
@@ -151,12 +150,12 @@ export class LspClient {
      */
     private static addGeneratedCodeNotificationListener() {
         // Handler for newly generated code
-        this.currentConnection.onNotification("textDocument/generatedCode", (params: any) => {
-            var paramJson = JSON.parse(params);
-            var language = paramJson.language.toLowerCase();
-            var value = paramJson.value;
+        this.currentConnection.onNotification('textDocument/generatedCode', (params: any) => {
+            const paramJson = JSON.parse(params);
+            const language = paramJson.language.toLowerCase();
+            const value = paramJson.value;
 
-            var currentModel = this.outputEditor.getModel()
+            const currentModel = this.outputEditor.getModel();
             if (currentModel) {
                 currentModel.setValue(value);
                 monaco.editor.setModelLanguage(currentModel, language);
@@ -165,7 +164,7 @@ export class LspClient {
     }
 
     /**
-     * Adds listener to ``onDidChangeTextDocument``-method to inform the server about 
+     * Adds listener to ``onDidChangeTextDocument``-method to inform the server about
      * the changed schema
      *
      * @private
@@ -175,10 +174,10 @@ export class LspClient {
     private static addDidChangeTextDocumentListener() {
         // Handler for changing of the schema
         this.monacoServices.workspace.onDidChangeTextDocument((event: any) => {
-            if (event.textDocument.languageId == "yaml") {
+            if (event.textDocument.languageId === 'yaml') {
                 this.sendSchemaChangedNotification();
                 ContentManager.setValue(ContentEnum.Schema, event.textDocument.getText());
-            } else if (event.textDocument.languageId == "ov") {
+            } else if (event.textDocument.languageId === 'ov') {
                 ContentManager.setValue(ContentEnum.Code, event.textDocument.getText());
             }
         });
@@ -194,7 +193,7 @@ export class LspClient {
      */
     private static addAliasesChangesListener() {
         // Handler for semantic-highlighting
-        this.currentConnection.onNotification("textDocument/aliasesChanges", (params: string) => {
+        this.currentConnection.onNotification('textDocument/aliasesChanges', (params: string) => {
             monaco.languages.setLanguageConfiguration('ov', {
                 comments: {
                     lineComment: params as string
@@ -211,9 +210,10 @@ export class LspClient {
      * @memberof LspClient
      */
     private static sendSchemaChangedNotification() {
-        var schemaValue = this.schemaEditor.getValue();
-        var textdocumentUri = this.ovEditor.getModel()!.uri.toString();
-        this.currentConnection.sendNotification("textDocument/schemaChanged", { schema: schemaValue, uri: textdocumentUri });
+        const schemaValue = this.schemaEditor.getValue();
+        const textdocumentUri = this.ovEditor.getModel()!.uri.toString();
+        this.currentConnection.sendNotification(
+            'textDocument/schemaChanged', { schema: schemaValue, uri: textdocumentUri });
     }
 
     /**
@@ -224,23 +224,24 @@ export class LspClient {
      * @memberof LspClient
      */
     private static sendLanguageConfiguration() {
-        var cultureSelectBox = document.getElementById("culture") as HTMLSelectElement;
+        const cultureSelectBox = document.getElementById('culture') as HTMLSelectElement;
 
         if (cultureSelectBox != null) {
-            var selectedCulture = cultureSelectBox.options[cultureSelectBox.selectedIndex].value;
-            var textdocumentUri = this.ovEditor.getModel()!.uri.toString();
-            this.currentConnection.sendNotification("textDocument/cultureChanged", { culture: selectedCulture, uri: textdocumentUri });
+            const selectedCulture = cultureSelectBox.options[cultureSelectBox.selectedIndex].value;
+            const textdocumentUri = this.ovEditor.getModel()!.uri.toString();
+            this.currentConnection.sendNotification(
+                'textDocument/cultureChanged', { culture: selectedCulture, uri: textdocumentUri });
         }
 
-        var languageSelectBox = document.getElementById("language") as HTMLSelectElement;
+        const languageSelectBox = document.getElementById('language') as HTMLSelectElement;
 
         if (languageSelectBox != null) {
-            var selectedLanguage = languageSelectBox.options[languageSelectBox.selectedIndex].value;
-            var textdocumentUri = this.ovEditor.getModel()!.uri.toString();
-            this.currentConnection.sendNotification("textDocument/languageChanged", { language: selectedLanguage, uri: textdocumentUri });
+            const selectedLanguage = languageSelectBox.options[languageSelectBox.selectedIndex].value;
+            const textdocumentUri = this.ovEditor.getModel()!.uri.toString();
+            this.currentConnection.sendNotification(
+                'textDocument/languageChanged', { language: selectedLanguage, uri: textdocumentUri });
         }
     }
-
 
     /**
      * Sets the click handler to the select-elements for the langauge and culture
@@ -250,28 +251,30 @@ export class LspClient {
      * @memberof LspClient
      */
     private static setClickHandler() {
-        var cultureSelectBox = document.getElementById("culture") as HTMLSelectElement;
+        const cultureSelectBox = document.getElementById('culture') as HTMLSelectElement;
 
         if (cultureSelectBox != null) {
             cultureSelectBox.onchange = (e: Event) => {
                 if (e != null) {
-                    var selectedCulture = cultureSelectBox.options[cultureSelectBox.selectedIndex].value;
-                    var textdocumentUri = this.ovEditor.getModel()!.uri.toString();
-                    this.currentConnection.sendNotification("textDocument/cultureChanged", { culture: selectedCulture, uri: textdocumentUri });
+                    const selectedCulture = cultureSelectBox.options[cultureSelectBox.selectedIndex].value;
+                    const textdocumentUri = this.ovEditor.getModel()!.uri.toString();
+                    this.currentConnection.sendNotification(
+                        'textDocument/cultureChanged', { culture: selectedCulture, uri: textdocumentUri });
                 }
-            }
+            };
         }
 
-        var languageSelectBox = document.getElementById("language") as HTMLSelectElement;
+        const languageSelectBox = document.getElementById('language') as HTMLSelectElement;
 
         if (languageSelectBox != null) {
             languageSelectBox.onchange = (e: Event) => {
                 if (e != null) {
-                    var selectedLanguage = languageSelectBox.options[languageSelectBox.selectedIndex].value;
-                    var textdocumentUri = this.ovEditor.getModel()!.uri.toString();
-                    this.currentConnection.sendNotification("textDocument/languageChanged", { language: selectedLanguage, uri: textdocumentUri });
+                    const selectedLanguage = languageSelectBox.options[languageSelectBox.selectedIndex].value;
+                    const textdocumentUri = this.ovEditor.getModel()!.uri.toString();
+                    this.currentConnection.sendNotification(
+                        'textDocument/languageChanged', { language: selectedLanguage, uri: textdocumentUri });
                 }
-            }
+            };
         }
     }
 
@@ -310,6 +313,3 @@ export class LspClient {
         return new ReconnectingWebSocket(url, undefined, socketOptions);
     }
 }
-
-
-

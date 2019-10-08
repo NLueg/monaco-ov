@@ -9,7 +9,7 @@ import { loadWASM } from 'onigasm'; // peer dependency of 'monaco-textmate'
  * @class TextMateTokenizer
  */
 export class TextMateTokenizer {
-    private wasmIsInitialized : boolean;
+    private wasmIsInitialized: boolean;
 
     constructor() {
         this.wasmIsInitialized = false;
@@ -23,23 +23,23 @@ export class TextMateTokenizer {
      */
     public async setTokenization(params: object) {
         if (!this.wasmIsInitialized) {
-            await loadWASM(require("./../../node_modules/onigasm/lib/onigasm.wasm"));
+            await loadWASM(require('./../../node_modules/onigasm/lib/onigasm.wasm'));
             this.wasmIsInitialized = true;
-        }		
-	
-		const registry = new Registry({
-			getGrammarDefinition: async (scopeName) => {
-				return {
-					format: 'json',
-					content: await params
-				}
-			}
-		});
-	
-		// map of monaco "language id's" to TextMate scopeNames
-		const grammars = new Map()
-		grammars.set('ov', 'source.ov')
-	
-		await wireTmGrammars(monaco, registry, grammars);
+        }
+
+        const registry = new Registry({
+            getGrammarDefinition: async (scopeName) => {
+                return {
+                    format: 'json',
+                    content: await params
+                };
+            }
+        });
+
+        // map of monaco "language id's" to TextMate scopeNames
+        const grammars = new Map();
+        grammars.set('ov', 'source.ov');
+
+        await wireTmGrammars(monaco, registry, grammars);
     }
 }

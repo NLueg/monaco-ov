@@ -5,8 +5,8 @@
  * @enum {number}
  */
 export enum ContentEnum {
-    Schema = "ov-language-schema",
-    Code = "ov-language-code"
+    Schema = 'ov-language-schema',
+    Code = 'ov-language-code'
 }
 
 /**
@@ -17,7 +17,19 @@ export enum ContentEnum {
  * @class ContentManager
  */
 export class ContentManager {
-    
+
+    public static getValue(content: ContentEnum): string {
+        const storageItem: string | null = this.storage.getItem(content);
+        if (!storageItem) { return this.default(content); }
+
+        return storageItem;
+
+    }
+
+    public static setValue(content: ContentEnum, value: string): void {
+        this.storage.setItem(content, value);
+    }
+
     /**
      * Defines the storage we want to use for saving the values.
      *
@@ -27,18 +39,6 @@ export class ContentManager {
      * @memberof ContentManager
      */
     private static storage: Storage = sessionStorage;
-
-    public static getValue(content: ContentEnum): string {
-        var storageItem: string | null = this.storage.getItem(content);
-        if (!storageItem) return this.default(content);
-
-        return storageItem;
-
-    }
-
-    public static setValue(content: ContentEnum, value: string): void {
-        this.storage.setItem(content, value);
-    }
 
     private static default(content: ContentEnum): string {
         switch (content) {
@@ -54,7 +54,7 @@ Wenn der Bewerber Minderjährig ist
 Dann Sie müssen mindestens 18 Jahre alt sein und aus Dortmund kommen
 
 Wenn der Bewerber Minderjährig ist
-    oder seine Berufserfahrung ist kürzer als 5 Jahre 
+    oder seine Berufserfahrung ist kürzer als 5 Jahre
 Dann Sie müssen mindestens 18 Jahre alt sein und über eine Berufserfahrung
         von minimum 5 Jahren verfügen
 
@@ -71,16 +71,14 @@ Als Berufserfahrung in Monaten
 
 `;
             case ContentEnum.Schema:
-                    return `Name: Satoshi 
-Alter: 25 
+                return `Name: Satoshi
+Alter: 25
 Wohnort: Dortmund
 Berufserfahrung: 5
-Einkaufsliste: 
+Einkaufsliste:
     Preis: 10`;
             default:
-                return "";
+                return '';
         }
     }
 }
-
-

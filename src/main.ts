@@ -1,6 +1,6 @@
-import { LspClient } from "./client/LspClient";
-import { MonacoClientCreator } from "./client/MonacoClient";
-import { MonacoOvConfiguration } from "./monaco-configuration/MonacoOvConfiguration";
+import { LspClient } from './client/LspClient';
+import { MonacoClientCreator } from './client/MonacoClient';
+import { MonacoOvConfiguration } from './monaco-configuration/MonacoOvConfiguration';
 
 require('monaco-editor');
 (self as any).MonacoEnvironment = {
@@ -8,9 +8,9 @@ require('monaco-editor');
         if (label === 'typescript' || label === 'javascript') {
             return './ts.worker.bundle.js';
         }
-        return './editor.worker.bundle.js'
+        return './editor.worker.bundle.js';
     }
-}
+};
 
 require('../css/style.css');
 require('../images/logo-v2-small.png');
@@ -22,8 +22,8 @@ createEditors();
 async function createEditors() {
     MonacoOvConfiguration.setOvLanguageSupport();
 
-    var ovlEditor = await MonacoClientCreator.createOvlEditor();
-    var schemaEditor = await MonacoClientCreator.createSchemaEditor();
-    var outputEditor = await MonacoClientCreator.createOutputEditor();
+    const ovlEditor = await MonacoClientCreator.createOvlEditor();
+    const schemaEditor = await MonacoClientCreator.createSchemaEditor();
+    const outputEditor = await MonacoClientCreator.createOutputEditor();
     LspClient.createLspClient(ovlEditor, schemaEditor, outputEditor);
 }
