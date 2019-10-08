@@ -1,12 +1,8 @@
+import { CloseAction, createConnection, ErrorAction, IConnection, MonacoLanguageClient, MonacoServices, OutputChannel } from 'monaco-languageclient';
 import { listen, MessageConnection } from 'vscode-ws-jsonrpc';
-import {
-    MonacoLanguageClient, CloseAction, ErrorAction,
-    MonacoServices, createConnection, IConnection
-} from 'monaco-languageclient';
-import normalizeUrl = require('normalize-url');
+import { ContentEnum, ContentManager } from '../ContentManager';
 import { TextMateTokenizer } from '../monaco-configuration/TextMateTokenizer';
-// import { SemanticHighlightingService } from '../highlighting/semantic-highlighting-service';
-// import { BaseLanguageClient } from 'vscode-languageclient';
+import normalizeUrl = require('normalize-url');
 
 const ReconnectingWebSocket = require('reconnecting-websocket');
 
@@ -42,21 +38,17 @@ export class LspClient {
         // install Monaco language client services
         this.monacoServices = MonacoServices.install(ovlEditor);
 
-
         // create the web socket
         const url = this.createUrl('/ovLanguage');
         const webSocket = this.createWebSocket(url);
-
 
         // listen when the web socket is opened
         listen({
             webSocket,
             onConnection: async connection => {
-
-                // create and start the language client
+                // creates and starts the language client
                 const languageClient = this.createLanguageClient(connection);
                 const disposable = languageClient.start();
-
                 connection.onClose(() => disposable.dispose());
 
                 await languageClient.onReady;
@@ -76,6 +68,23 @@ export class LspClient {
      * @memberof LspClient
      */
     private static createLanguageClient(connection: MessageConnection): MonacoLanguageClient {
+        let output = '';
+        const fooChannel: OutputChannel = {
+            append(value: string) {
+                console.log(value);
+                output += value;
+            },
+            appendLine(value: string) {
+                console.log(value);
+                output += value + '\n';
+            },
+            show() {
+                console.log(output)
+            },
+            dispose() { console.log("Dispose"); }
+        }
+        
+
         var client = new MonacoLanguageClient({
             name: "openVALIDATION Language Client",
             clientOptions: {
@@ -87,7 +96,9 @@ export class LspClient {
                 errorHandler: {
                     error: () => ErrorAction.Continue,
                     closed: () => CloseAction.DoNotRestart
-                }
+                },
+
+                traceOutputChannel: fooChannel
             },
             // create a language client connection from the JSON RPC connection on demand
             connectionProvider: {
@@ -109,13 +120,11 @@ export class LspClient {
             }
         });
 
-        // client.registerFeature(SemanticHighlightingService.createNewFeature(new SemanticHighlightingService(), client as unknown as BaseLanguageClient, "ov"));
-
         return client;
     }
 
     /**
-     * Adds listener to the notification "textDocument/semanticHighlighting" to set a new  
+     * Adds listener to the notification ``textDocument/semanticHighlighting`` to set a new  
      * tokenizer for syntax-highlighting
      *
      * @private
@@ -130,7 +139,7 @@ export class LspClient {
     }
 
     /**
-     * Adds listener to the notification "textDocument/generatedCode" to reload the code 
+     * Adds listener to the notification ``textDocument/generatedCode`` to reload the code 
      * of the code-editor
      *
      * @private
@@ -153,7 +162,7 @@ export class LspClient {
     }
 
     /**
-     * Adds listener to "onDidChangeTextDocument"-Method to inform the server about 
+     * Adds listener to ``onDidChangeTextDocument``-method to inform the server about 
      * the changed schema
      *
      * @private
@@ -165,12 +174,15 @@ export class LspClient {
         this.monacoServices.workspace.onDidChangeTextDocument((event) => {
             if (event.textDocument.languageId == "yaml") {
                 this.sendSchemaChangedNotification();
+                ContentManager.setValue(ContentEnum.Schema, event.textDocument.getText());
+            } else if (event.textDocument.languageId == "ov") {
+                ContentManager.setValue(ContentEnum.Code, event.textDocument.getText());
             }
         });
     }
 
     /**
-     * Adds listener to the notification "textDocument/aliasesChanges" to set a few
+     * Adds listener to the notification ``textDocument/aliasesChanges`` to set a few
      * language-configurations for the ov-language
      *
      * @private
