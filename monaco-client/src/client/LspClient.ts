@@ -133,7 +133,7 @@ export class LspClient {
      */
     private static addSemanticHighlightingNotificationListener() {
         // Handler for semantic-highlighting
-        this.currentConnection.onNotification("textDocument/semanticHighlighting", (params) => {
+        this.currentConnection.onNotification("textDocument/semanticHighlighting", (params: any) => {
             this.tokenizer.setTokenization(params);
         });
     }
@@ -148,8 +148,8 @@ export class LspClient {
      */
     private static addGeneratedCodeNotificationListener() {
         // Handler for newly generated code
-        this.currentConnection.onNotification("textDocument/generatedCode", (param) => {
-            var paramJson = JSON.parse(param);
+        this.currentConnection.onNotification("textDocument/generatedCode", (params: any) => {
+            var paramJson = JSON.parse(params);
             var language = paramJson.language.toLowerCase();
             var value = paramJson.value;
 
@@ -171,7 +171,7 @@ export class LspClient {
      */
     private static addDidChangeTextDocumentListener() {
         // Handler for changing of the schema
-        this.monacoServices.workspace.onDidChangeTextDocument((event) => {
+        this.monacoServices.workspace.onDidChangeTextDocument((event: any) => {
             if (event.textDocument.languageId == "yaml") {
                 this.sendSchemaChangedNotification();
                 ContentManager.setValue(ContentEnum.Schema, event.textDocument.getText());

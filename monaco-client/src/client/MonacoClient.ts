@@ -33,7 +33,7 @@ export class MonacoClientCreator {
     public static async createOutputEditor(): Promise<monaco.editor.IStandaloneCodeEditor> {
         return monaco.editor.create(document.getElementById("generated-code")!, {
             model: monaco.editor.createModel("", 'java', monaco.Uri.parse('inmemory://model.java')),
-            theme: 'vs-dark',
+            theme: 'vs',
             readOnly: true,
             automaticLayout: true,
             glyphMargin: true,
