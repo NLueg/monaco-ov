@@ -43,40 +43,30 @@ export class ContentManager {
     private static default(content: ContentEnum): string {
         switch (content) {
             case ContentEnum.Code:
-                return `Wenn das Alter des Bewerbers kleiner 18 ist
-Dann Sie müssen mindestens 18 Jahre alt sein
+                return `Wenn die Kreditpunkte des Studenten kleiner als 120 sind
+Dann die Anmeldung der Bachelorarbeit verlangt 120 Kreditpunkte
 
-    das Alter des Bewerbers ist kleiner 18
-Als Minderjährig
+Die Anzahl der Kreditpunkte darf nicht kleiner als 120 sein
 
-Wenn der Bewerber Minderjährig ist
-    und sein Wohnort ist nicht Dortmund
-Dann Sie müssen mindestens 18 Jahre alt sein und aus Dortmund kommen
+Wenn der Laufzettel nicht ausgefülllt wurde
+    und die Kreditpunkte des Studenten kleiner als 120 sind
+        oder das Fachsemester kleiner als 5 ist
+Dann die Anmeldung der Bachelorarbeit ist nicht möglich
 
-Wenn der Bewerber Minderjährig ist
-    oder seine Berufserfahrung ist kürzer als 5 Jahre
-Dann Sie müssen mindestens 18 Jahre alt sein und über eine Berufserfahrung
-        von minimum 5 Jahren verfügen
+    Kreditpunkte des Studenten kleiner 120
+Als Unqualifiziert
 
-Kommentar Dies ist ein Kommentar
-            Und hier auch...
+Wenn der Student unqualifiziert ist
+Dann die Anmeldung der Bachelorarbeit verlangt mindestens 120 Keditpunkte
 
-    Summe von Einkaufsliste.Preis
-Als Ausgaben
-
-das Alter des Bewerbers muss mindestens 18 sein
-
-    ( 20 - 18 ) * 12
-Als Berufserfahrung in Monaten
+Kommentar Das ist ein Kommentar
+            ... über mehrere Zeilen
 
 `;
             case ContentEnum.Schema:
-                return `Name: Satoshi
-Alter: 25
-Wohnort: Dortmund
-Berufserfahrung: 5
-Einkaufsliste:
-    Preis: 10`;
+                return `Kreditpunkte: 120
+Laufzettel: True
+Fachsemester: 5`;
             default:
                 return '';
         }
