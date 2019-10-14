@@ -1,29 +1,29 @@
-import { LspClient } from './client/LspClient';
-import { MonacoClientCreator } from './client/MonacoClient';
-import { MonacoOvConfiguration } from './monaco-configuration/MonacoOvConfiguration';
+import { LspClient } from "./client/LspClient";
+import { MonacoClientCreator } from "./client/MonacoClient";
+import { MonacoOvConfiguration } from "./monaco-configuration/MonacoOvConfiguration";
 
-require('monaco-editor');
+require("monaco-editor");
 (self as any).MonacoEnvironment = {
-    getWorkerUrl: (moduleId: any, label: string) => {
-        if (label === 'typescript' || label === 'javascript') {
-            return './ts.worker.bundle.js';
-        }
-        return './editor.worker.bundle.js';
+  getWorkerUrl: (moduleId: any, label: string) => {
+    if (label === "typescript" || label === "javascript") {
+      return "./ts.worker.bundle.js";
     }
+    return "./editor.worker.bundle.js";
+  }
 };
 
-require('../css/style.css');
-require('../images/logo-v2-small.png');
+require("../css/style.css");
+require("../images/logo-v2-small.png");
 createEditors();
 
 /**
  * Creates all needed monaco- and lsp-clients and sets up the configuration for openVALIDATION
  */
 async function createEditors() {
-    MonacoOvConfiguration.setOvLanguageSupport();
+  MonacoOvConfiguration.setOvLanguageSupport();
 
-    const ovlEditor = await MonacoClientCreator.createOvlEditor();
-    const schemaEditor = await MonacoClientCreator.createSchemaEditor();
-    const outputEditor = await MonacoClientCreator.createOutputEditor();
-    LspClient.createLspClient(ovlEditor, schemaEditor, outputEditor);
+  const ovlEditor = await MonacoClientCreator.createOvlEditor();
+  const schemaEditor = await MonacoClientCreator.createSchemaEditor();
+  const outputEditor = await MonacoClientCreator.createOutputEditor();
+  LspClient.createLspClient(ovlEditor, schemaEditor, outputEditor);
 }
