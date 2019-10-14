@@ -13,11 +13,11 @@ require("monaco-editor");
 };
 
 require("../css/style.css");
-require("../images/logo-v2-small.png");
+require("../images/logo-v2.png");
 createEditors();
 
 /**
- * Creates all needed monaco- and lsp-clients and sets up the configuration for openVALIDATION
+ * Creates all required monaco- and lsp-clients and sets up the configuration for openVALIDATION
  */
 async function createEditors() {
   MonacoOvConfiguration.setOvLanguageSupport();
