@@ -8,7 +8,7 @@ import {
   OutputChannel,
   Trace
 } from "monaco-languageclient";
-import normalizeUrl = require("normalize-url");
+import * as normalizeUrl from "normalize-url";
 import { listen, MessageConnection } from "vscode-ws-jsonrpc";
 import { ContentEnum, ContentManager } from "../ContentManager";
 import { TextMateTokenizer } from "../monaco-configuration/TextMateTokenizer";
