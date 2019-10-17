@@ -10,7 +10,7 @@
     "prepare": "npm run clean && npm run build",
     "start": "npm run build && node lib/server.js",
     "start:watch": "nodemon",
-    "test": "testcafe",
+    "test": "npm run build && testcafe",
     "watch": "tsc -w"
   },
   "dependencies": {
