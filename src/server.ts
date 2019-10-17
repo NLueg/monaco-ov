@@ -3,6 +3,9 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import * as express from "express";
+import { startServerAsExternalProcess } from "ov-language-server/lib/server-launcher";
+
+startServerAsExternalProcess();
 
 process.on("uncaughtException", (err: any) => {
   console.error("Uncaught Exception: ", err.toString());

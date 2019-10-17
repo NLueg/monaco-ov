@@ -1,0 +1,5 @@
+{
+  "browsers": "chrome",
+  "src": "test/index.ts",
+  "appCommand": "node lib/server.js"
+}
