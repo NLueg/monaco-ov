@@ -15,12 +15,12 @@
   },
   "dependencies": {
     "monaco-editor": "^0.17.0",
-    "monaco-editor-textmate": "^2.2.0",
+    "monaco-editor-textmate": "^2.2.1",
     "monaco-languageclient": "^0.10.2",
     "monaco-textmate": "^3.0.1",
     "normalize-url": "^4.5.0",
     "onigasm": "^2.2.2",
-    "ov-language-server": "0.0.6",
+    "ov-language-server": "^0.0.8",
     "reconnecting-websocket": "^3.2.2"
   },
   "devDependencies": {
