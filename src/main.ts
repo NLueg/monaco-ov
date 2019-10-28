@@ -14,6 +14,7 @@ require("monaco-editor");
 
 require("../css/style.css");
 require("../images/logo-v2.png");
+require("../images/logo.png");
 createEditors();
 
 /**
