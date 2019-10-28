@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import * as express from "express";
-import { startServerAsExternalProcess } from "ov-language-server/lib/server-launcher";
+import { startServerAsExternalProcess } from "ov-language-server/dist/server-launcher";
 
 startServerAsExternalProcess();
 
@@ -16,9 +16,12 @@ process.on("uncaughtException", (err: any) => {
 
 // create the express application
 const app = express();
+const EDITOR_PORT = process.env.EDITOR_PORT || 8000;
+
 // server the static content, i.e. index.html
 app.use(express.static(__dirname));
+
 // start the server
-app.listen(8000, () =>
-  console.log("Editor is running on http://localhost:8000")
+app.listen(EDITOR_PORT, () =>
+  console.log(`Editor is running on http://localhost:${EDITOR_PORT}`)
 );

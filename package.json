@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
     "build": "npm run compile && webpack && npm run copy",
-    "clean": "rimraf lib",
+    "clean": "rimraf dist",
     "compile": "tsc",
-    "copy": "cpx src/index.html lib",
+    "copy": "cpx src/index.html dist",
     "prepare": "npm run clean && npm run build",
-    "start": "npm run build && node lib/server.js",
+    "start": "npm run build && node dist/server.js",
     "start:watch": "nodemon",
     "test": "npm run build && testcafe",
     "watch": "tsc -w"
@@ -20,7 +20,7 @@
     "monaco-textmate": "^3.0.1",
     "normalize-url": "^4.5.0",
     "onigasm": "^2.2.2",
-    "ov-language-server": "^0.0.8",
+    "ov-language-server": "0.0.10",
     "reconnecting-websocket": "^3.2.2"
   },
   "devDependencies": {

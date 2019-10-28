@@ -14,6 +14,7 @@ import { ContentEnum, ContentManager } from "../ContentManager";
 import { TextMateTokenizer } from "../monaco-configuration/TextMateTokenizer";
 
 const ReconnectingWebSocket = require("reconnecting-websocket");
+const PORT = process.env.PORT || 3010;
 
 export class LspClient {
   /**
@@ -338,7 +339,7 @@ export class LspClient {
   private static createUrl(path: string): string {
     const protocol = location.protocol === "https:" ? "wss" : "ws";
     return normalizeUrl(
-      `${protocol}://localhost:3000${location.pathname}${path}`
+      `${protocol}://localhost:${PORT}${location.pathname}${path}`
     );
   }
 

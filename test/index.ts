@@ -1,7 +1,9 @@
 import { Selector, ClientFunction } from "testcafe";
 
+const EDITOR_PORT = process.env.EDITOR_PORT || 8000;
+
 fixture("Test")
-  .page("http://localhost:8000")
+  .page(`http://localhost:${EDITOR_PORT}`)
   .afterEach(async t => {
     const { error } = await t.getBrowserConsoleMessages();
 
