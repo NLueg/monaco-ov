@@ -46,21 +46,20 @@ export class ContentManager {
         return `Wenn die Kreditpunkte des Studenten kleiner als 120 sind
 Dann die Anmeldung der Bachelorarbeit verlangt 120 Kreditpunkte
 
-Die Anzahl der Kreditpunkte darf nicht kleiner als 120 sein
-
 Wenn der Laufzettel nicht ausgefülllt wurde
     und die Kreditpunkte des Studenten kleiner als 120 sind
         oder das Fachsemester kleiner als 5 ist
 Dann die Anmeldung der Bachelorarbeit ist nicht möglich
 
-    Kreditpunkte des Studenten kleiner 120
-Als Unqualifiziert
-
 Wenn der Student unqualifiziert ist
-Dann die Anmeldung der Bachelorarbeit verlangt mindestens 120 Keditpunkte
+Dann die Anmeldung der Bachelorarbeit verlangt mindestens 120 Kreditpunkte
 
 Kommentar Das ist ein Kommentar
             ... über mehrere Zeilen
+
+    Kreditpunkte des Studenten kleiner 120
+Als Unqualifiziert
+        
 
 `;
       case ContentEnum.Schema:
