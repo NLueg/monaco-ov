@@ -2,6 +2,10 @@ import { LspClient } from "./client/LspClient";
 import { MonacoClientCreator } from "./client/MonacoClient";
 import { MonacoOvConfiguration } from "./monaco-configuration/MonacoOvConfiguration";
 
+require("../css/style.css");
+require("../images/logo-v2.png");
+require("../images/logo.png");
+
 require("monaco-editor");
 (self as any).MonacoEnvironment = {
   getWorkerUrl: (moduleId: any, label: string) => {
@@ -12,9 +16,6 @@ require("monaco-editor");
   }
 };
 
-require("../css/style.css");
-require("../images/logo-v2.png");
-require("../images/logo.png");
 createEditors();
 
 /**

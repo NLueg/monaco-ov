@@ -30,7 +30,7 @@ const common = {
         test: /\.(png|jpg|gif)$/i,
         use: [
           {
-            loader: "url-loader",
+            loader: "file-loader",
             options: {
               fallback: "responsive-loader"
             }

@@ -1,4 +1,4 @@
-import { Selector, ClientFunction } from "testcafe";
+import { Selector } from "testcafe";
 
 const EDITOR_PORT = process.env.EDITOR_PORT || 8001;
 

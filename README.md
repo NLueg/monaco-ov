@@ -11,8 +11,6 @@ This is the client for the [language-server](https://microsoft.github.io/languag
 - [x] Diagnostics reporting
 - [x] Documentation on hover
 - [x] Rename symbol
-- [ ] Code Outline & Show Symbols
-
 
 ## Getting started
 
