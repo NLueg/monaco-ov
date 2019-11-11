@@ -20,7 +20,7 @@
     "monaco-textmate": "^3.0.1",
     "normalize-url": "^4.5.0",
     "onigasm": "^2.2.2",
-    "ov-language-server": "0.0.10",
+    "ov-language-server": "0.0.11",
     "reconnecting-websocket": "^3.2.2"
   },
   "devDependencies": {
