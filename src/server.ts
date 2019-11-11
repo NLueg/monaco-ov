@@ -16,7 +16,7 @@ process.on("uncaughtException", (err: any) => {
 
 // create the express application
 const app = express();
-const EDITOR_PORT = process.env.EDITOR_PORT || 8001;
+const EDITOR_PORT = process.env.EDITOR_PORT || 8000;
 
 // server the static content, i.e. index.html
 app.use(express.static(__dirname));

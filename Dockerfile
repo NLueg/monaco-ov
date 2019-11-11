@@ -15,7 +15,7 @@ RUN npm install
 # Bundle app source
 COPY . .
 
-ENV EDITOR_PORT 8001
+ENV EDITOR_PORT 8000
 
-EXPOSE 8001 3010 31057
+EXPOSE 8000 3010 31057
 CMD [ "node", "dist/server.js" ]

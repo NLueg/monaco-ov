@@ -47,15 +47,17 @@ export class ContentManager {
 Dann die Anmeldung der Bachelorarbeit verlangt 120 Kreditpunkte
 
 Wenn der Laufzettel nicht ausgefülllt wurde
-    und die Kreditpunkte des Studenten kleiner als 120 sind
-        oder das Fachsemester kleiner als 5 ist
+  und die Kreditpunkte des Studenten kleiner als 120 sind
+      oder das Fachsemester kleiner als 5 ist
+      oder der Nachname ist Mustermann
 Dann die Anmeldung der Bachelorarbeit ist nicht möglich
 
 Wenn der Student unqualifiziert ist
-Dann die Anmeldung der Bachelorarbeit verlangt mindestens 120 Kreditpunkte
+Dann die Anmeldung der Bachelorarbeit verlangt
+     mindestens 120 Keditpunkte
 
 Kommentar Das ist ein Kommentar
-            ... über mehrere Zeilen
+          ... über mehrere Zeilen       
 
     Kreditpunkte des Studenten kleiner 120
 Als Unqualifiziert
@@ -65,7 +67,9 @@ Als Unqualifiziert
       case ContentEnum.Schema:
         return `Kreditpunkte: 120
 Laufzettel: True
-Fachsemester: 5`;
+Fachsemester: 5
+Vorname: Max
+Nachname: Mustermann`;
       default:
         return "";
     }
