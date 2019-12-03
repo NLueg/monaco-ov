@@ -1,48 +1,48 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
-        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-        <link rel="icon" href="../images/logo.png">
-    </head>
+  <head>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+    <link rel="icon" href="../images/logo.png" />
+  </head>
 
-    <body>
-        <a href="/">
-            <div id="logo"></div>
-        </a>
+  <body>
+    <a href="/">
+      <div id="logo"></div>
+    </a>
 
-        <div class="se-pre-con"></div>
-        <div id="editor-wrapper">
-            <div class="tabAreaLeft tabArea">
-                <select id="culture" class="selectBox">
-                    <option value="en">English</option>
-                    <option value="de" selected>German</option>
-                    <option value="ru">Russian</option>
-                </select>
-            </div>
+    <div class="se-pre-con"></div>
+    <div id="editor-wrapper">
+      <div class="tabAreaLeft tabArea">
+        <select id="culture" class="selectBox">
+          <option value="en">English</option>
+          <option value="de">German</option>
+          <option value="ru">Russian</option>
+        </select>
+      </div>
 
-            <div class="tabAreaRight tabArea">
-                <select id="language" class="selectBox">
-                    <option value="Java" selected>Java</option>
-                    <option value="CSharp">C#</option>
-                    <option value="JavaScript">JavaScript</option>
-                    <option value="Node">NodeJS</option>
-                    <option value="Python">Python</option>
-                </select>
-            </div>
+      <div class="tabAreaRight tabArea">
+        <select id="language" class="selectBox">
+          <option value="Java">Java</option>
+          <option value="CSharp">C#</option>
+          <option value="JavaScript">JavaScript</option>
+          <option value="Node">NodeJS</option>
+          <option value="Python">Python</option>
+        </select>
+      </div>
 
-            <div class="panel rule">
-                <div id="monaco-editor" style="font-size: 1em"></div>
-            </div>
-            <div class="panel code">
-                <div id="generated-code"></div>
-            </div>
+      <div class="panel rule">
+        <div id="monaco-editor" style="font-size: 1em"></div>
+      </div>
+      <div class="panel code">
+        <div id="generated-code"></div>
+      </div>
 
-            <div class="panel schema">
-                <div id="schema-definition"></div>
-            </div>
-        </div>
+      <div class="panel schema">
+        <div id="schema-definition"></div>
+      </div>
+    </div>
 
-        <script src="main.bundle.js"></script>
-    </body>
+    <script src="main.bundle.js"></script>
+  </body>
 </html>

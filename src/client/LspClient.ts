@@ -253,16 +253,24 @@ export class LspClient {
    * @memberof LspClient
    */
   private static sendLanguageConfiguration() {
+    const textdocumentUri = this.ovEditor.getModel()!.uri.toString();
+
     const cultureSelectBox = document.getElementById(
       "culture"
     ) as HTMLSelectElement;
 
     if (cultureSelectBox != null) {
-      const selectedCulture =
-        cultureSelectBox.options[cultureSelectBox.selectedIndex].value;
-      const textdocumentUri = this.ovEditor.getModel()!.uri.toString();
+      let culture: string = ContentManager.getValue(ContentEnum.Culture);
+      for (let index = 0; index < cultureSelectBox.options.length; index++) {
+        const element = cultureSelectBox.options[index];
+        if (element.value == culture) {
+          cultureSelectBox.options[index].selected = true;
+          break;
+        }
+      }
+
       this.currentConnection.sendNotification("textDocument/cultureChanged", {
-        culture: selectedCulture,
+        culture: culture,
         uri: textdocumentUri
       });
     }
@@ -272,11 +280,17 @@ export class LspClient {
     ) as HTMLSelectElement;
 
     if (languageSelectBox != null) {
-      const selectedLanguage =
-        languageSelectBox.options[languageSelectBox.selectedIndex].value;
-      const textdocumentUri = this.ovEditor.getModel()!.uri.toString();
+      let language: string = ContentManager.getValue(ContentEnum.Language);
+      for (let index = 0; index < languageSelectBox.options.length; index++) {
+        const element = languageSelectBox.options[index];
+        if (element.value == language) {
+          languageSelectBox.options[index].selected = true;
+          break;
+        }
+      }
+
       this.currentConnection.sendNotification("textDocument/languageChanged", {
-        language: selectedLanguage,
+        language: language,
         uri: textdocumentUri
       });
     }
@@ -300,6 +314,9 @@ export class LspClient {
           const selectedCulture =
             cultureSelectBox.options[cultureSelectBox.selectedIndex].value;
           const textdocumentUri = this.ovEditor.getModel()!.uri.toString();
+
+          ContentManager.setValue(ContentEnum.Culture, selectedCulture);
+
           this.currentConnection.sendNotification(
             "textDocument/cultureChanged",
             { culture: selectedCulture, uri: textdocumentUri }
@@ -318,6 +335,9 @@ export class LspClient {
           const selectedLanguage =
             languageSelectBox.options[languageSelectBox.selectedIndex].value;
           const textdocumentUri = this.ovEditor.getModel()!.uri.toString();
+
+          ContentManager.setValue(ContentEnum.Language, selectedLanguage);
+
           this.currentConnection.sendNotification(
             "textDocument/languageChanged",
             { language: selectedLanguage, uri: textdocumentUri }

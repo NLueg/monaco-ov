@@ -6,7 +6,9 @@
  */
 export enum ContentEnum {
   Schema = "ov-language-schema",
-  Code = "ov-language-code"
+  Code = "ov-language-code",
+  Culture = "ov-language-culture",
+  Language = "ov-language-language"
 }
 
 /**
@@ -70,6 +72,10 @@ Laufzettel: True
 Fachsemester: 5
 Vorname: Max
 Nachname: Mustermann`;
+      case ContentEnum.Culture:
+        return `en`;
+      case ContentEnum.Language:
+        return `JavaScript`;
       default:
         return "";
     }
