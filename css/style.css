@@ -84,11 +84,11 @@ body {
   right: 0px;
 }
 
-#culture {
+#cultureSelectBox {
   float: right;
 }
 
-#language {
+#languageSelectBox {
   float: left;
 }
 
