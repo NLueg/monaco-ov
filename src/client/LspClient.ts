@@ -4,11 +4,10 @@ import {
   ErrorAction,
   IConnection,
   MonacoLanguageClient,
-  MonacoServices,
-  OutputChannel,
-  Trace
+  MonacoServices
 } from "monaco-languageclient";
 import * as normalizeUrl from "normalize-url";
+import { NotificationEnum } from "ov-language-server-types";
 import { listen, MessageConnection } from "vscode-ws-jsonrpc";
 import { ContentEnum, ContentManager } from "../ContentManager";
 import { TextMateTokenizer } from "../monaco-configuration/TextMateTokenizer";
@@ -54,9 +53,6 @@ export class LspClient {
 
         const disposable = languageClient.start();
         connection.onClose(() => disposable.dispose());
-
-        languageClient.trace = Trace.Verbose;
-
         await languageClient.onReady;
       }
     });
@@ -82,23 +78,6 @@ export class LspClient {
   private static createLanguageClient(
     connection: MessageConnection
   ): MonacoLanguageClient {
-    let output = "";
-    const fooChannel: OutputChannel = {
-      append(value: string) {
-        output += value;
-      },
-      appendLine(value: string) {
-        output += value + "\n";
-        console.log(output);
-      },
-      show() {
-        console.log(output);
-      },
-      dispose() {
-        console.log("Dispose");
-      }
-    };
-
     const client = new MonacoLanguageClient({
       name: "openVALIDATION Language Client",
       clientOptions: {
@@ -109,9 +88,7 @@ export class LspClient {
         errorHandler: {
           error: () => ErrorAction.Continue,
           closed: () => CloseAction.DoNotRestart
-        },
-
-        traceOutputChannel: fooChannel
+        }
       },
       // create a language client connection from the JSON RPC connection on demand
       connectionProvider: {
@@ -151,7 +128,7 @@ export class LspClient {
   private static addSemanticHighlightingNotificationListener() {
     // Handler for semantic-highlighting
     this.currentConnection.onNotification(
-      "textDocument/semanticHighlighting",
+      NotificationEnum.SemanticHighlighting,
       (params: any) => {
         this.tokenizer.setTokenization(params);
       }
@@ -169,7 +146,7 @@ export class LspClient {
   private static addGeneratedCodeNotificationListener() {
     // Handler for newly generated code
     this.currentConnection.onNotification(
-      "textDocument/generatedCode",
+      NotificationEnum.GeneratedCode,
       (params: any) => {
         const paramJson = JSON.parse(params);
         const language = paramJson.language.toLowerCase();
@@ -218,7 +195,7 @@ export class LspClient {
   private static addAliasesChangesListener() {
     // Handler for semantic-highlighting
     this.currentConnection.onNotification(
-      "textDocument/aliasesChanges",
+      NotificationEnum.CommentKeywordChanged,
       (params: string) => {
         monaco.languages.setLanguageConfiguration("ov", {
           comments: {
@@ -239,7 +216,7 @@ export class LspClient {
   private static sendSchemaChangedNotification() {
     const schemaValue = this.schemaEditor.getValue();
     const textdocumentUri = this.ovEditor.getModel()!.uri.toString();
-    this.currentConnection.sendNotification("textDocument/schemaChanged", {
+    this.currentConnection.sendNotification(NotificationEnum.SchemaChanged, {
       schema: schemaValue,
       uri: textdocumentUri
     });
@@ -256,7 +233,7 @@ export class LspClient {
     const textdocumentUri = this.ovEditor.getModel()!.uri.toString();
 
     const cultureSelectBox = document.getElementById(
-      "culture"
+      "cultureSelectBox"
     ) as HTMLSelectElement;
 
     if (cultureSelectBox != null) {
@@ -269,14 +246,14 @@ export class LspClient {
         }
       }
 
-      this.currentConnection.sendNotification("textDocument/cultureChanged", {
+      this.currentConnection.sendNotification(NotificationEnum.CultureChanged, {
         culture: culture,
         uri: textdocumentUri
       });
     }
 
     const languageSelectBox = document.getElementById(
-      "language"
+      "languageSelectBox"
     ) as HTMLSelectElement;
 
     if (languageSelectBox != null) {
@@ -289,10 +266,13 @@ export class LspClient {
         }
       }
 
-      this.currentConnection.sendNotification("textDocument/languageChanged", {
-        language: language,
-        uri: textdocumentUri
-      });
+      this.currentConnection.sendNotification(
+        NotificationEnum.LanguageChanged,
+        {
+          language: language,
+          uri: textdocumentUri
+        }
+      );
     }
   }
 
@@ -305,7 +285,7 @@ export class LspClient {
    */
   private static setClickHandler() {
     const cultureSelectBox = document.getElementById(
-      "culture"
+      "cultureSelectBox"
     ) as HTMLSelectElement;
 
     if (cultureSelectBox != null) {
@@ -318,7 +298,7 @@ export class LspClient {
           ContentManager.setValue(ContentEnum.Culture, selectedCulture);
 
           this.currentConnection.sendNotification(
-            "textDocument/cultureChanged",
+            NotificationEnum.CultureChanged,
             { culture: selectedCulture, uri: textdocumentUri }
           );
         }
@@ -326,7 +306,7 @@ export class LspClient {
     }
 
     const languageSelectBox = document.getElementById(
-      "language"
+      "languageSelectBox"
     ) as HTMLSelectElement;
 
     if (languageSelectBox != null) {
@@ -339,7 +319,7 @@ export class LspClient {
           ContentManager.setValue(ContentEnum.Language, selectedLanguage);
 
           this.currentConnection.sendNotification(
-            "textDocument/languageChanged",
+            NotificationEnum.LanguageChanged,
             { language: selectedLanguage, uri: textdocumentUri }
           );
         }

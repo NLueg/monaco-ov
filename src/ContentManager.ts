@@ -1,3 +1,5 @@
+import { CultureEnum, LanguageEnum } from "ov-language-server-types";
+
 /**
  * Enum that defines the content that needs to be saved with the contentManager
  *
@@ -73,9 +75,9 @@ Fachsemester: 5
 Vorname: Max
 Nachname: Mustermann`;
       case ContentEnum.Culture:
-        return `en`;
+        return CultureEnum.English;
       case ContentEnum.Language:
-        return `JavaScript`;
+        return LanguageEnum.JavaScript;
       default:
         return "";
     }
