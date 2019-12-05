@@ -75,7 +75,7 @@ Fachsemester: 5
 Vorname: Max
 Nachname: Mustermann`;
       case ContentEnum.Culture:
-        return CultureEnum.English;
+        return CultureEnum.German;
       case ContentEnum.Language:
         return LanguageEnum.JavaScript;
       default:
