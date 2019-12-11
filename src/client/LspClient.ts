@@ -4,13 +4,14 @@ import {
   ErrorAction,
   IConnection,
   MonacoLanguageClient,
-  MonacoServices
+  MonacoServices,
+  Range
 } from "monaco-languageclient";
 import * as normalizeUrl from "normalize-url";
-import { NotificationEnum } from "ov-language-server-types";
+import { ICodeNotification, NotificationEnum } from "ov-language-server-types";
 import { listen, MessageConnection } from "vscode-ws-jsonrpc";
 import { ContentEnum, ContentManager } from "../ContentManager";
-import { TextMateTokenizer } from "../monaco-configuration/TextMateTokenizer";
+import { createTokenizationSupport } from "../syntax-highlighting/TokensProvider";
 
 const ReconnectingWebSocket = require("reconnecting-websocket");
 const PORT = process.env.PORT || 3010;
@@ -58,7 +59,6 @@ export class LspClient {
     });
   }
 
-  private static tokenizer = new TextMateTokenizer();
   private static ovEditor: monaco.editor.IStandaloneCodeEditor;
   private static outputEditor: monaco.editor.IStandaloneCodeEditor;
   private static schemaEditor: monaco.editor.IStandaloneCodeEditor;
@@ -130,7 +130,14 @@ export class LspClient {
     this.currentConnection.onNotification(
       NotificationEnum.SemanticHighlighting,
       (params: any) => {
-        this.tokenizer.setTokenization(params);
+        var jsonParameter = JSON.parse(params) as {
+          range: Range;
+          pattern: string;
+        }[];
+        monaco.languages.setTokensProvider(
+          "ov",
+          createTokenizationSupport(jsonParameter)
+        );
       }
     );
   }
@@ -148,9 +155,9 @@ export class LspClient {
     this.currentConnection.onNotification(
       NotificationEnum.GeneratedCode,
       (params: any) => {
-        const paramJson = JSON.parse(params);
+        const paramJson = JSON.parse(params) as ICodeNotification;
         const language = paramJson.language.toLowerCase();
-        const value = paramJson.value;
+        const value = paramJson.implementation;
 
         const currentModel = this.outputEditor.getModel();
         if (currentModel) {

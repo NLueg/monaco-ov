@@ -4,6 +4,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "declarationMap": true,
+    "sourceMap": true,
     "inlineSources": false,
     "declaration": true,
     "stripInternal": true,
@@ -14,7 +15,8 @@
     "rootDir": "src",
     "outDir": "dist",
     "baseUrl": ".",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "downlevelIteration": true
   },
   "include": ["src"]
 }
