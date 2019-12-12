@@ -7,7 +7,7 @@ const dist = path.resolve(__dirname, "dist");
 
 const webpack = require("webpack");
 const merge = require("webpack-merge");
-const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
+const terserPlugin = require("terser-webpack-plugin");
 
 const common = {
   entry: {
@@ -36,11 +36,6 @@ const common = {
             }
           }
         ]
-      },
-      {
-        test: /\.wasm$/,
-        loader: "file-loader",
-        type: "javascript/auto"
       }
     ]
   },
@@ -61,7 +56,7 @@ const common = {
 if (process.env["NODE_ENV"] === "production") {
   module.exports = merge(common, {
     plugins: [
-      new UglifyJSPlugin(),
+      new terserPlugin(),
       new webpack.DefinePlugin({
         "process.env.NODE_ENV": JSON.stringify("production")
       })
