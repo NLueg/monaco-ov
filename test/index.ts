@@ -1,6 +1,6 @@
 import { Selector } from "testcafe";
 
-const EDITOR_PORT = process.env.EDITOR_PORT || 8001;
+const EDITOR_PORT = process.env.EDITOR_PORT || 8000;
 
 fixture("Test")
   .page(`http://localhost:${EDITOR_PORT}`)
