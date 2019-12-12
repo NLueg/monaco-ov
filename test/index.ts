@@ -10,7 +10,7 @@ fixture("Test")
     await t.expect(error[0]).notOk();
   });
 
-test("Catch console.log", async t => {
+test("Check if generated code exists", async t => {
   await t.click(Selector("#monaco-editor")).wait(4000);
   const generatedCodeLines = Selector("#generated-code .view-lines");
 
