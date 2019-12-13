@@ -17,7 +17,7 @@
     "monaco-editor": "^0.17.0",
     "monaco-languageclient": "file:../monaco-languageclient/client",
     "normalize-url": "^4.5.0",
-    "ov-language-server": "0.x.x",
+    "ov-language-server": "0.0.20",
     "ov-language-server-types": "0.x.x",
     "reconnecting-websocket": "^3.2.2"
   },
