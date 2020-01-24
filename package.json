@@ -15,10 +15,10 @@
   },
   "dependencies": {
     "monaco-editor": "^0.17.0",
-    "monaco-languageclient": "file:../monaco-languageclient/client",
+    "monaco-languageclient": "0.10.2",
     "normalize-url": "^4.5.0",
-    "ov-language-server": "0.0.20",
-    "ov-language-server-types": "0.x.x",
+    "ov-language-server": "^0.1.1",
+    "ov-language-server-types": "^0.1.0",
     "reconnecting-websocket": "^3.2.2"
   },
   "devDependencies": {
