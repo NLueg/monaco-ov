@@ -40,3 +40,5 @@ They can be set with the notification `openVALIDATION/cultureChanged` and `openV
 In addition we send the schema from the monaco-client to the language-server with `openVALIDATION/schemaChanged`.
 
 Lastly we can receive the generated code from the language-server with the notification `openVALIDATION/generatedCode`.
+
+The integration of monaco with the language-server happens in the [LspClient.ts](https://github.com/NLueg/monaco-ov/blob/master/src/client/LspClient.ts).
