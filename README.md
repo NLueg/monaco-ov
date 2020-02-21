@@ -22,8 +22,10 @@ This is the monaco-client for the [language-server](https://microsoft.github.io/
 ### Local dev env
 
 ```sh
+git clone https://github.com/NLueg/monaco-ov.git
+cd ./monaco-ov
 npm install
-npm run start (or start:watch for automated rebuild)
+npm run start
 ```
 
 ## Documentation
