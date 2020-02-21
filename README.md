@@ -1,4 +1,4 @@
-# openVALIDATION Language Server
+# monaco-editor for openVALIDATION
 
 This is the monaco-client for the [language-server](https://microsoft.github.io/language-server-protocol/) implementation of the domain-specific-langauge [openVALIDATION](https://github.com/openvalidation/openvalidation)
 
