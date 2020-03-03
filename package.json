@@ -14,12 +14,12 @@
     "watch": "tsc -w"
   },
   "dependencies": {
-    "monaco-editor": "^0.17.0",
-    "monaco-languageclient": "0.10.2",
-    "normalize-url": "^4.5.0",
+    "monaco-editor": "^0.18.1",
+    "monaco-languageclient": "0.11.0",
+    "normalize-url": "^5.0.0",
     "ov-language-server": "^0.1.5",
     "ov-language-server-types": "^0.1.0",
-    "reconnecting-websocket": "^3.2.2"
+    "reconnecting-websocket": "^4.4.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.2",

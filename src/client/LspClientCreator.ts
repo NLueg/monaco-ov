@@ -12,8 +12,8 @@ import { ICodeNotification, NotificationEnum } from "ov-language-server-types";
 import { listen, MessageConnection } from "vscode-ws-jsonrpc";
 import { ContentEnum, ContentManager } from "../ContentManager";
 import { createTokenizationSupport } from "../syntax-highlighting/TokensProvider";
+import ReconnectingWebSocket from "reconnecting-websocket";
 
-const ReconnectingWebSocket = require("reconnecting-websocket");
 const PORT = process.env.PORT || 3010;
 
 export class LspClientCreator {
@@ -368,6 +368,6 @@ export class LspClientCreator {
       maxRetries: Infinity,
       debug: false
     };
-    return new ReconnectingWebSocket(url, undefined, socketOptions);
+    return new ReconnectingWebSocket(url, undefined, socketOptions) as WebSocket;
   }
 }
