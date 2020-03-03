@@ -1,6 +1,21 @@
 import { ContentEnum, ContentManager } from "../ContentManager";
 
 export class MonacoClientCreator {
+
+  /**
+   * Registers openVALIDATION as a language to monaco
+   *
+   * @static
+   * @memberof MonacoOvConfiguration
+   */
+  public static setOvLanguageSupport() {
+    monaco.languages.register({
+      id: "ov",
+      extensions: [".ov"],
+      aliases: ["OV", "ov", "openVALIDATION"]
+    });
+  }
+
   /**
    * Creates the main-editor for openVALDATION
    *

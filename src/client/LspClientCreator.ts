@@ -16,7 +16,7 @@ import { createTokenizationSupport } from "../syntax-highlighting/TokensProvider
 const ReconnectingWebSocket = require("reconnecting-websocket");
 const PORT = process.env.PORT || 3010;
 
-export class LspClient {
+export class LspClientCreator {
   /**
    * Creates the language-client und connects it to the language-server
    *
