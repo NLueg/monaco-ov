@@ -30,7 +30,7 @@ npm run start
 
 ## Documentation
 
-When starting the project, the language-server gets automatically in the background.
+When starting the project, the language-server gets automatically started in the background.
 The language-server provides the functionallity for openVALIDATION.
 In addition to the LSP, we provide semantical highlighting for openVALIDATION-Code
 
