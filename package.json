@@ -14,9 +14,10 @@
     "watch": "tsc -w"
   },
   "dependencies": {
-    "monaco-editor": "^0.18.1",
-    "monaco-languageclient": "0.11.0",
+    "monaco-editor": "^0.19.1",
+    "monaco-languageclient": "0.12.0",
     "normalize-url": "^5.0.0",
+    "vscode-ws-jsonrpc": "^0.2.0",
     "ov-language-server": "^0.1.5",
     "ov-language-server-types": "^0.1.0",
     "reconnecting-websocket": "^4.4.0"
@@ -40,8 +41,7 @@
     "tslint-config-prettier": "^1.18.0",
     "tslint-plugin-prettier": "^2.2.0",
     "typescript": "^3.8.3",
-    "vscode-ws-jsonrpc": "^0.1.1",
-    "webpack": "^4.42.0",
+    "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
     "webpack-merge": "^4.2.2"
   }
