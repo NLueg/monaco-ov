@@ -18,8 +18,8 @@
     "monaco-languageclient": "0.12.0",
     "normalize-url": "^5.0.0",
     "vscode-ws-jsonrpc": "^0.2.0",
-    "ov-language-server": "^0.1.5",
-    "ov-language-server-types": "^0.1.0",
+    "ov-language-server": "^0.1.6",
+    "ov-language-server-types": "^0.1.2",
     "reconnecting-websocket": "^4.4.0"
   },
   "devDependencies": {
